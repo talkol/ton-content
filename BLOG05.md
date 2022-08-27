@@ -144,7 +144,7 @@ Place this code inside `test/counter.spec.ts` as this is where we instructed moc
 
 As you can see, we load our contract in the `beforeEach()` clause, meaning our contract will be reloaded before every single test. This best practice will guarantee that our different tests will not pollute each other, even if they change the contract state.
 
-To execute our (now empty) test suite, run in terminal `npm run test` from the project root. This should be the result:
+To execute our (now empty) test suite, run in terminal `npm test` from the project root. This should be the result:
 
 ```
   Counter tests
