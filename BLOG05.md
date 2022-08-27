@@ -44,17 +44,15 @@ My team started building smart contracts on Ethereum in 2017, we've witnessed th
 
 5. Testing in production is useful for the last mile. Ethereum has less than [5 million](https://www.fool.com/the-ascent/cryptocurrency/articles/more-people-own-ethereum-than-ever-before-heres-why/) active users yet over [40 million](https://cryptopotato.com/over-44-million-contracts-deployed-to-ethereum-since-genesis-research/) deployed contracts. The vast majority of all deployed contracts on Ethereum mainnet are beta versions that developers deployed for a few tests and then abandoned. Don't feel bad about polluting mainnet with garbage, nobody cares.
 
-I saw a few people in the TON ecosystem complaining that [ton-contract-executor](https://github.com/Naltox/ton-contract-executor) is missing some important features like multi-contract tests. These features are conceptually very easy to add (they're all in the thin JavaScript wrapper, no need to touch the WebAssembly part). With some community love we can easily bring this amazing tool to be feature complete.
+I saw a few people in the TON ecosystem complaining that [ton-contract-executor](https://github.com/Naltox/ton-contract-executor) is missing some important features like multi-contract tests. These features are conceptually very easy to add (they're all in the thin JavaScript wrapper, no need to touch the WebAssembly part). With some community love we can easily bring this amazing tool to be feature complete. Another killer feature of ton-contract-executor is its ability to load code and data cells [from mainnet](https://github.com/Naltox/ton-contract-executor/blob/8b352d0cf96553e9ded19a102a890e17c973d017/README.md?plain=1#L81), which will allow us to lazily "fork" mainnet in TON just like Hardhat/Ganache do.
 
-After carefully considering all available approaches, I hope I convinced you why we're going to spend 90% of our time testing with approach (4) and 10% of our time testing with approach (5).
+After carefully considering all available approaches, I hope I convinced you why we're going to spend 90% of our time testing with approach (4) and 10% of our time testing with approach (5). We're going to conveniently forget about the other approaches and avoid using them at all.
 
 ## Step 1: Setting up a TypeScript environment
 
 Our secret weapon for testing is going to be JavaScript. Learning how to interact with TON from JavaScript is a good investment since web apps (your dapp client) run in web browsers and are developed almost exclusively in JavaScript. This means that you're going to have to learn this at some point or another. The efficiency of our approach lies by relying on JavaScript for *just about everything* that FunC can't do - from building to deploying and now testing.
 
-I now realize that I did mention TypeScript in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) yet neglected to go over the exact setup. Let's fix this now.
-
-Make sure that Node.js is properly installed by running `node -v` (I'm using `v17.3.0` but other recent version above '16' should be fine).
+I now realize that I did mention TypeScript in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) yet neglected to go over the exact setup. Let's fix this now. Make sure that Node.js is properly installed by running `node -v` (I'm using `v17.3.0` but other recent version above '16' should be fine).
 
 Create `package.json` with the following content:
 
@@ -104,4 +102,58 @@ Also create `tsconfig.json` with the [following content](https://github.com/ton-
 Alternatively, if you want to save time, you can simply copy my working project skeleton from [https://github.com/ton-defi-org/tonstarter-contracts](https://github.com/ton-defi-org/tonstarter-contracts).
 
 ## Step 2: Loading our contract in a test
+
+Quick reminder, in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) we compiled our smart contract code in step 5 and generated the file `counter.cell` - which contains the TVM bytecode for our contract in cell format (code cell). In step 6, before deploying our contract, we initialized its persistent storage by implementing a simple JavaScript function to generate its initial data cell:
+
+```ts
+import { beginCell } from "ton";
+
+function initData(initialCounterValue: number) {
+  return beginCell().storeUint(initialCounterValue, 64).endCell();
+}
+```
+
+In order to load our contract into [ton-contract-executor](https://github.com/Naltox/ton-contract-executor), all we have to do is provide it with both the initial code cell and the initial data cell:
+
+```ts
+import chai, { expect } from "chai";
+import chaiBN from "chai-bn";
+import BN from "bn.js";
+chai.use(chaiBN(BN));
+
+import * as fs from "fs";
+import { Cell } from "ton";
+import { SmartContract } from "ton-contract-executor";
+
+describe("Counter tests", () => {
+  let contract: SmartContract;
+
+  beforeEach(async () => {
+    const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // compilation output from part 1 step 5
+    const initDataCell = initData(17); // the function we've implemented just now
+    contract = await SmartContract.fromCell(initCodeCell, initDataCell);
+  });
+
+  it("should run the first test", async () => {
+    // currently empty, will place a test body here soon
+  });
+});
+```
+
+Place this code inside `test/counter.spec.ts` as this is where we instructed mocha to look for tests in `package.json`. Make sure `counter.cell` is found in your project root.
+
+As you can see, we load our contract in the `beforeEach()` clause, meaning our contract will be reloaded before every single test. This best practice will guarantee that our different tests will not pollute each other, even if they change the contract state.
+
+To execute our (now empty) test suite, run in terminal `npm run test` from the project root. This should be the result:
+
+```
+  Counter tests
+    ✔ should run the first test (245ms)
+
+  1 passing (1s)
+```
+
+What happens when the tests run? A Node.js process is executed which runs our JavaScript code. The code uses ton-contract-executor to load into the JavaScript runtime a live instance of the [TVM](https://ton-blockchain.github.io/docs/tvm.pdf) - the component from TON's codebase charged with executing smart contracts - and instructs the TVM to load our contract. Since all of this happens in-process, our tests will be blazingly fast and start instantaneously.
+
+## Step 3: Testing a Getter
 
