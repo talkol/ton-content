@@ -122,8 +122,9 @@ import BN from "bn.js";
 chai.use(chaiBN(BN));
 
 import * as fs from "fs";
-import { Cell } from "ton";
+import { Cell, Address, InternalMessage, CommonMessageInfo, CellMessage } from "ton";
 import { SmartContract } from "ton-contract-executor";
+const zeroAddress = Address.parseRaw("0:0000000000000000000000000000000000000000000000000000000000000000");
 
 describe("Counter tests", () => {
   let contract: SmartContract;
@@ -157,3 +158,148 @@ What happens when the tests run? A Node.js process is executed which runs our Ja
 
 ## Step 3: Testing a Getter
 
+Now that the boilerplate is behind us, we can finally focus on writing some test logic. Ideally, we want to test through every execution path of our contract to make sure it's working. Let's start with something simple, our getter. Quick reminder, in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) step 4 we implemented a getter in FunC that looked like this:
+
+```
+int counter() method_id {        ;; getter declaration - returns int as result
+  var (counter) = load_data();   ;; call our read utility function to load value
+  return counter;
+}
+```
+
+As you recall, our test initializes our contract with a data cell via `initData(17)` - so the initial counter value is 17. Therefore, we expect the getter to return `17` after initialization. Translated to TypeScript:
+
+```ts
+  it("should get counter value", async () => {
+    const call = await contract.invokeGetMethod("counter", []);
+    expect(call.result[0]).to.be.bignumber.equal(new BN(17));
+  });
+```
+
+Replace the `it("should run the first test", ...` from before with this new test and run the tests with `npm test`.
+
+Notice a few interesting things in our test. First, the FunC type returned from our getter is `int`. This TVM number type is [257 bit long](https://ton.org/docs/#/func/types?id=atomic-types) (256 signed) so it supports huge virtually unbounded numbers. The native JavaScript `number` type is limited to [64 bit](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number) so it cannot necessarily hold the result. We use a [big number](https://github.com/indutny/bn.js/) library to work around this limitation.
+
+Second, our getter does not take any input arguments, but if it did, we can easily pass them in `invokeGetMethod()`. You can see an [example](https://github.com/Naltox/ton-contract-executor/blob/8b352d0cf96553e9ded19a102a890e17c973d017/src/smartContract/SmartContract.spec.ts#L60) of this in ton-contract-executor's own test suite.
+
+## Step 4: Testing a Message
+
+While getters are read-only operations that don't change contract state, messages are used to modify state through user transactions. Reminder, we've implemented the following message handler in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) step 4:
+
+```
+() recv_internal(int msg_value, cell in_msg, slice in_msg_body) impure {  ;; well known function signature
+  int op = in_msg_body~load_uint(32);                                     ;; parse the operation type encoded in the beginning of msg body
+  var (counter) = load_data();                                            ;; call our read utility function to load values from storage
+  if (op == 1) {                                                          ;; handle op #1 = increment
+    save_data(counter + 1);                                               ;; call our write utility function to persist values to storage
+  }
+}
+```
+
+Let's write a test that sends a message with op #1 = *increment*. To do that, let's first encode our message as a cell. As you recall from [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func), the format of [internal messages](https://ton.org/docs/#/howto/smart-contract-guidelines?id=internal-messages) on TON normally begins with a 32 bit unsigned integer that defines the op (`1` in our case) and then a 64 bit unsigned integer that defines the query_id (which we don't really need here, so we pass `0`). If our message had any other custom arguments, they would come next.
+
+```ts
+import { Cell, beginCell } from "ton";
+
+function encodeIncrementMessage(): Cell {
+  const op = 1;
+  return beginCell().storeUint(op, 32).storeUint(0, 64).endCell();
+}
+```
+
+
+Let's send the message and see that our contract indeed increments the counter value as expected:
+
+```ts
+  it("should increment the counter value", async () => {
+    const message = encodeIncrementMessage();
+    const send = await contract.sendInternalMessage(
+      new InternalMessage({
+        from: Address.parse('EQD4FPq-PRDieyQKkizFTRtSDyucUIqrj0v_zXJmqaDp6_0t'), // address of the sender of the message
+        to: zeroAddress, // ignored, this is assumed to be our contract instance
+        value: 0, // are we sending any TON coins with this message
+        bounce: true, // do we allow this message to bounce back on error
+        body: new CommonMessageInfo({ 
+          body: new CellMessage(message)
+        })
+      })
+    );
+    expect(send.type).to.equal("success");
+
+    const call = await contract.invokeGetMethod("counter", []);
+    expect(call.result[0]).to.be.bignumber.equal(new BN(18));
+  });
+```
+
+Notice that we already know from the previous test that the counter is indeed initialized to `17`, so if our message was successful, we can use the getter to get the counter value and make sure it has been incremented to `18`.
+
+Also notice that we only send internal messages to contracts. TON supports [external messages](https://ton.org/docs/#/smart-contracts/messages) as well, but as a dapp developer you're never expected to use them. External messages are used for very specific contracts, mainly wallet contracts, that you would normally never have to write by yourself. You can safely ignore them.
+
+## Step 5: Debugging by dumping variables
+
+Testing is fun as long as everything works as expected. But what happens when something doesn't work and you're not sure where the problem is? The most convenient method I found to debug your FunC code is to add debug prints in strategic places. This is very similar to using `console.log(variable)` in JavaScript to [print](https://developer.mozilla.org/en-US/docs/Web/API/Console/log) the value of a variable.
+
+The TVM has a special function for [dumping variables](https://ton.org/docs/#/func/builtins?id=dump-variable) in debug. Run `~dump variable_name;` in your FunC code to use it.
+
+For example, let's say we're trying to send some TON coin to our contract on a message. We can do this by passing a non-zero `value` in TypeScript under `new InternalMessage()` above. In FunC, this value should arrive under the `msg_value` argument of `recv_internal()`. Let's print this incoming value in FunC to make sure that it indeed works as expected. I added the debug print as the first line of our `recv_internal()` message handler from before:
+
+```
+() recv_internal(int msg_value, cell in_msg, slice in_msg_body) impure {  ;; well known function signature
+  ~dump msg_value;                                                        ;; this debug print line was just added
+  int op = in_msg_body~load_uint(32);                                     ;; parse the operation type encoded in the beginning of msg body
+  var (counter) = load_data();                                            ;; call our read utility function to load values from storage
+  if (op == 1) {                                                          ;; handle op #1 = increment
+    save_data(counter + 1);                                               ;; call our write utility function to persist values to storage
+  }
+}
+```
+
+Since we changed our FunC code, we'll have to rebuild the contract to see the effect and generate a new `counter.cell`.
+
+We're going to have to make another small change. By default, ton-contract-executor runs the TVM without debug mode active since it's faster. To enable debug mode TVM, we're going to have to change the initialization of our contract in TypeScript in `beforeEach`:
+
+```ts
+  beforeEach(async () => {
+    const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // same like before
+    const initDataCell = initData(17); // same like before
+    contract = await SmartContract.fromCell(initCodeCell, initDataCell, {
+      debug: true // this new addition will enable debug mode
+    });
+  });
+```
+
+Debug output will be printed to terminal when you run your tests.
+
+## Step 6: Testing in production (without testnet)
+
+Steps 2-5 above are all part of approach (4) - where I promised to spend 90% of our testing time. These tests are very fast to run (there's nothing faster than an in-process instance of a bare-bones TVM) and are very CI-friendly. They are also free and don't require you to spend any TON coin. These tests should give you the majority of confidence that your code is actually working. If there are testing scenarios that you desire but ton-contract-executor does not support smoothly like multi contract, please [open issues](https://github.com/Naltox/ton-contract-executor/issues) and contribute. I'm confident that as a community, this is where we should invest most of our efforts.
+
+What about the remaining 10%? All of our tests so far worked inside a lab. Before we're launching our contract, we should run some tests in the wild! This is what approach (5) is all about.
+
+From a technical perspective, this is actually the simplest approach of all. You don't need to do anything special. Get some TON coin and deploy your contract to mainnet! The process was covered in detail in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func). Then, interact with your contract manually just like your users will. This may require you to implement a dapp client or frontend, something we'll only discuss in the next parts of this series.
+
+If you don't have a dapp client, you can also interact with your contract programatically. We've covered this in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) at step 7.
+
+If this step is so easy, why am I devoting so much time to discuss it? Because, from my experience, most dapp developers are reluctant to do so. Instead of testing on mainnet, they prefer to work on testnet. In my eyes, this is a waste of time. Let me attempt to refute any reasons to use testnet one last time:
+
+* *"testnet is as easy to work with as mainnet"* - False. Testnet requires special wallets and special explorers. There are also multiple instances of testnet like TonHub's sandbox. This mess is going to cost you time to sort out. I've seen too many developers deploying their contract to testnet and then trying to access it on sandbox without understanding why they don't see anything deployed.
+
+* *"mainnet is more expensive since it costs real TON coin to use"* - False. Deploying your contract to mainnet costs around 10 cents. Your time costs more. Let's say an hour of your time is only worth the minimum wage in the US (a little over $7), if working on mainnet saves you an hour, you can deploy your contract 70 times without feeling guilty that you're wasting money.
+
+* *"testnet is a good simulation of mainnet"* - False. Nobody really cares about testnet since it's not a production network. Are you certain that validators on testnet are running the latest node versions? Are all config parameters like gas costs identical to mainnet? Are all contracts by other teams that you may be relying on deployed to testnet?
+
+* *"I don't want to pollute mainnet with abandoned test contracts"* - Don't worry about it. Users won't care since the chance of them reaching your unadvertised contract address by accident is zero. Validators won't care since you paid them for this service, they enjoy the traction. Also, TON has an auto-cleanup mechanism baked in, your contract will eventually run out of gas of rent and will be destroyed automatically.
+
+## Summary
+
+This is the end of part 2 in this blog series. We learned how to test and debug our FunC contract effectively. The next parts will focus on enriching our contract with more features and implementing additional aspects of our dapp such as its web app client.
+
+If you want to incorporate the methodologies explained above in your project, you are welcome to use a template Github repo that contains all the boilerplate discussed:
+
+https://github.com/ton-defi-org/tonstarter-contracts
+
+Happy coding!
+
+---
+
+Tal is a founder of Orbs Network (https://orbs.com). He's a passionate blockchain developer, open source advocate and a contributor to the TON ecosystem. He is also one of the main developers for TONcoin Fund (https://www.toncoin.fund). For Tal's work on TON, follow on GitHub (https://github.com/ton-defi-org). For Tal's personal work, follow on GitHub (https://github.com/talkol) and Twitter (https://twitter.com/koltal).
