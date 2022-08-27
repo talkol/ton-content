@@ -8,7 +8,7 @@ This is part 2 of my step by step guide for writing your first smart contract fo
 
 ## Why should you test?
 
-Testing is a big part of smart contract development. Smart contracts often deal with money and we don't want any of our users losing money because the smart contract had a bug. This is why it's normally expected from smart contract devleopers to share a test suite with the FunC implementation.
+Testing is a big part of smart contract development. Smart contracts often deal with money and we don't want any of our users losing money because the smart contract had a bug. This is why it's normally expected from smart contract devleopers to share a test suite with their FunC implementation.
 
 A thorough test suite is a good signal to your users that you've taken your role as a contract developer seriously. I would personally be very hesitant to deposit a substantial amount of money in any contract that has no tests. Since *code is law*, any bug in the contract code is also part of the agreement, so a user wouldn't really have anyone to blame for money lost, but themselves.
 
