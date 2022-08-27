@@ -92,7 +92,7 @@ Create `package.json` with the following content:
 
 The main libraries we're relying on are:
 * [typescript](https://www.typescriptlang.org/) and [ts-node](https://www.npmjs.com/package/ts-node) for adding types to JavaScript so we can maintain our sanity
-* [mocha](https://mochajs.org/) for running our tests
+* [mocha](https://mochajs.org/) for running our tests (if you're a jest fan, I think mocha is better for backend and jest for frontend)
 * [chai](https://www.npmjs.com/package/chai) for writing [expectations](https://www.chaijs.com/api/bdd/) and [chai-bn](https://www.npmjs.com/package/chai-bn) for adding support for arbitrarily large [big numbers](https://github.com/indutny/bn.js/)
 * [ton](https://www.npmjs.com/package/ton) and [ton-crypto](https://www.npmjs.com/package/ton) for basic interactions with TON blockchain primitives
 * [ton-contract-executor](https://www.npmjs.com/package/ton-contract-executor) for running the TVM (that executes our contract code) right inside Node.js
