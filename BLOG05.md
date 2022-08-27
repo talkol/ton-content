@@ -50,7 +50,7 @@ After carefully considering all available approaches, I hope I convinced you why
 
 ## Step 1: Setting up a TypeScript environment
 
-Our secret weapon for testing is going to be JavaScript. Learning how to interact with TON from JavaScript is a good investment since web apps (your dapp client) run in web browsers and are developed almost exclusively in JavaScript. This means that you're going to have to learn this at some point or another. The efficiency of our approach lies by relying on JavaScript for *just about everything* that FunC can't do - from building to deploying and now testing.
+Our secret weapon for testing is going to be JavaScript. Learning how to interact with TON from JavaScript is a good investment since web apps (your dapp client) run in web browsers and are developed almost exclusively in JavaScript. This means that you're going to have to learn this at some point or another. The efficiency of our approach lies in relying on JavaScript for *just about everything* that FunC can't do - from building to deploying and now testing.
 
 I now realize that I did mention TypeScript in [part 1](https://society.ton.org/ton-hello-world-step-by-step-guide-for-writing-your-first-smart-contract-in-func) yet neglected to go over the exact setup. Let's fix this now. Make sure that Node.js is properly installed by running `node -v` (I'm using `v17.3.0` but other recent version above '16' should be fine).
 
