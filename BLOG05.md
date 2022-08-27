@@ -18,7 +18,7 @@ Personally, I don't view testing as an afterthought taking place only when your 
 
 *Warning - this section is a bit more advanced than beginner, feel free to skip it if you trust my judgement of how to test.*
 
-Because testing is such as big deal in smart contract development, there's a surprising amount of tools and infrastructure in the TON ecosystem devoted to this topic. Before jumping in to the methodology that I believe in, I want to give a quick overview of the plethora of testing tools available out there:
+Because testing is such as big deal in smart contract development, there's a surprising amount of tools and infrastructure in the TON ecosystem devoted to this topic. Before jumping in to the methodology that I believe in, I want to give a quick overview of the plethora of testing tools that are available out there:
 
 1. **Deploying your contract to testnet** - Testnet is a live alternative instance of the entire TON blockchain where TON coin isn't the real deal and is [free to get](https://t.me/testgiver_ton_bot). This instance is obviously not as secure as mainnet, but offers an interesting staging environment where you can play. There are actually several different testnets on TON at the time of writing, "[testnet](https://testnet.tonscan.org/)" and "[sandbox](https://test.tonwhales.com/explorer)".
 
