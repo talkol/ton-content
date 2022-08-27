@@ -46,7 +46,7 @@ My team started building smart contracts on Ethereum in 2017, we've witnessed th
 
 I saw a few people in the TON ecosystem complaining that [ton-contract-executor](https://github.com/Naltox/ton-contract-executor) is missing some important features like multi-contract tests. These features are conceptually very easy to add (they're all in the thin JavaScript wrapper, no need to touch the WebAssembly part). With some community love we can easily bring this amazing tool to be feature complete.
 
-After carefully considering all available approaches, I hope I convinced you why we're going to spend 90% of our time testing with approach (4) and 10% testing with approach (5).
+After carefully considering all available approaches, I hope I convinced you why we're going to spend 90% of our time testing with approach (4) and 10% of our time testing with approach (5).
 
 ## Step 1: Setting up a TypeScript environment
 
