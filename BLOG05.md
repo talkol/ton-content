@@ -12,7 +12,7 @@ Testing is a big part of smart contract development. Smart contracts often deal 
 
 A thorough test suite is a good signal to your users that you've taken your role as a contract developer seriously. I would personally be very hesitant to deposit a substantial amount of money in any contract that has no tests. Since *code is law*, any bug in the contract code is also part of the agreement, so a user wouldn't really have anyone to blame for money lost, but themselves.
 
-Personally, I don't view testing as an afterthought taking place only when your code is completed. If done correctly, tests can be a powerful aid to the development process itself from the beginning, that will allow you to write better code faster.
+Personally, I don't view testing as an afterthought taking place only when your code is complete. If done correctly, tests can be a powerful aid to the development process itself from the beginning, that will allow you to write better code faster.
 
 ## Oh so many ways to test
 
