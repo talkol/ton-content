@@ -26,7 +26,7 @@ Because testing is such as big deal in smart contract development, there's a sur
 
 3. **Local blockchain with MyLocalTon** - [MyLocalTon](https://github.com/neodiX42/MyLocalTon) is a Java-based desktop executable that runs a personal local instance of TON blockchain on your machine that you can deploy contracts to and interact with.
 
-4. **Bare-bones TVM with ton-contract-executor** - [ton-contract-executor](https://github.com/Naltox/ton-contract-executor) is bare-bones version of just the [TVM](https://ton-blockchain.github.io/docs/tvm.pdf) running on [WebAssembly](https://webassembly.org/) with a thin JavaScript wrapper that allows test interactions from TypeScript.
+4. **Bare-bones TVM with ton-contract-executor** - [ton-contract-executor](https://github.com/Naltox/ton-contract-executor) is a bare-bones version of just the [TVM](https://ton-blockchain.github.io/docs/tvm.pdf) running on [WebAssembly](https://webassembly.org/) with a thin JavaScript wrapper that allows test interactions from TypeScript.
 
 5. **Deploying beta contracts to mainnet** - This form of "testing in production" simply deploys alternative beta versions of your contracts to mainnet and uses real (not free) TON coin to play with them in a real environment. If you found a bug, you simply deploy new fixed beta versions and waste a little more money.
 
