@@ -237,7 +237,7 @@ Also notice that we only send internal messages to contracts. TON supports [exte
 
 ## Step 5: Debugging by dumping variables
 
-Testing is fun as long as everything works as expected. But what happens when something doesn't work and you're not sure where the problem is? The most convenient method I found to debug your FunC code is to add debug prints in strategic places. This is very similar to using `console.log(variable)` in JavaScript to [print](https://developer.mozilla.org/en-US/docs/Web/API/Console/log) the value of a variable.
+Testing is fun as long as everything works as expected. But what happens when something doesn't work and you're not sure where the problem is? The most convenient method I found to debug your FunC code is to add debug prints in strategic places. This is very similar to debugging JavaScript by using `console.log(variable)` to [print](https://developer.mozilla.org/en-US/docs/Web/API/Console/log) the value of a variable.
 
 The TVM has a special function for [dumping variables](https://ton.org/docs/#/func/builtins?id=dump-variable) in debug. Run `~dump variable_name;` in your FunC code to use it.
 
