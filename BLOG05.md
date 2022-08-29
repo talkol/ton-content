@@ -288,7 +288,7 @@ If this step is so easy, why am I devoting so much time to discuss it? Because, 
 
 * *"testnet is a good simulation of mainnet"* - False. Nobody really cares about testnet since it's not a production network. Are you certain that validators on testnet are running the latest node versions? Are all config parameters like gas costs identical to mainnet? Are all contracts by other teams that you may be relying on deployed to testnet?
 
-* *"I don't want to pollute mainnet with abandoned test contracts"* - Don't worry about it. Users won't care since the chance of them reaching your unadvertised contract address by accident is zero. Validators won't care since you paid them for this service, they enjoy the traction. Also, TON has an auto-cleanup mechanism baked in, your contract will eventually run out of gas of rent and will be destroyed automatically.
+* *"I don't want to pollute mainnet with abandoned test contracts"* - Don't worry about it. Users won't care since the chance of them reaching your unadvertised contract address by accident is zero. Validators won't care since you paid them for this service, they enjoy the traction. Also, TON has an auto-cleanup mechanism baked in, your contract will eventually run out of gas for rent and will be destroyed automatically.
 
 ## Summary
 
