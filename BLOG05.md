@@ -97,7 +97,23 @@ The main libraries we're relying on are:
 * [ton](https://www.npmjs.com/package/ton) and [ton-crypto](https://www.npmjs.com/package/ton) for basic interactions with TON blockchain primitives
 * [ton-contract-executor](https://www.npmjs.com/package/ton-contract-executor) for running the TVM (that executes our contract code) right inside Node.js
 
-Also create `tsconfig.json` with the [following content](https://github.com/ton-defi-org/tonstarter-contracts/blob/main/tsconfig.json). Now run `npm install` in terminal.
+Also create `tsconfig.json` with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  }
+}
+```
+
+Now run `npm install` in terminal.
 
 Alternatively, if you want to save time, you can simply copy my working project skeleton from [https://github.com/ton-defi-org/tonstarter-contracts](https://github.com/ton-defi-org/tonstarter-contracts).
 
@@ -239,13 +255,13 @@ Also notice that we only send internal messages to contracts. TON supports [exte
 
 Testing is fun as long as everything works as expected. But what happens when something doesn't work and you're not sure where the problem is? The most convenient method I found to debug your FunC code is to add debug prints in strategic places. This is very similar to debugging JavaScript by using `console.log(variable)` to [print](https://developer.mozilla.org/en-US/docs/Web/API/Console/log) the value of variables.
 
-The TVM has a special function for [dumping variables](https://ton.org/docs/#/func/builtins?id=dump-variable) in debug. Run `~dump variable_name;` in your FunC code to use it.
+The TVM has a special function for [dumping variables](https://ton.org/docs/#/func/builtins?id=dump-variable) in debug. Run `~dump(variable_name);` in your FunC code to use it.
 
 For example, let's say we're trying to send some TON coin to our contract on a message. We can do this by passing a non-zero `value` in TypeScript under `new InternalMessage()` above. In FunC, this value should arrive under the `msg_value` argument of `recv_internal()`. Let's print this incoming value in FunC to make sure that it indeed works as expected. I added the debug print as the first line of our `recv_internal()` message handler from before:
 
 ```
 () recv_internal(int msg_value, cell in_msg, slice in_msg_body) impure {  ;; well known function signature
-  ~dump msg_value;                                                        ;; this debug print line was just added
+  ~dump(msg_value);                                                       ;; this debug print line was just added
   int op = in_msg_body~load_uint(32);                                     ;; parse the operation type encoded in the beginning of msg body
   var (counter) = load_data();                                            ;; call our read utility function to load values from storage
   if (op == 1) {                                                          ;; handle op #1 = increment
@@ -268,7 +284,23 @@ We're going to have to make another small change. By default, ton-contract-execu
   });
 ```
 
-Debug output will be printed to terminal when you run your tests.
+To see the debug output when running your tests, after every interaction with the contract (like sending it a message), print the logs of the response:
+
+```ts
+const send = await contract.sendInternalMessage(...);
+console.log(send.logs); // this will print the debug logs
+```
+
+In the output, look for log lines containing the string `#DEBUG#`. In the example below, the output `#DEBUG#: s0 = 0` means that the contents of `msg_value` is `0`:
+
+```
+[ 4][t 0][2022-08-30 13:02:08.391000][stackops.cpp:46]	execute XCHG s2
+[ 4][t 0][2022-08-30 13:02:08.391000][debugops.cpp:87]	execute DUMP s0
+[ 4][t 0][2022-08-30 13:02:08.391000][debugops.cpp:93]	#DEBUG#: s0 = 0
+[ 4][t 0][2022-08-30 13:02:08.391000][stackops.cpp:129]	execute DROP
+```
+
+You can also print constants by using `~dump(12345);` which can be helpful to show that the VM indeed reached a certain line.
 
 ## Step 6: Testing in production (without testnet)
 
@@ -302,4 +334,4 @@ Happy coding!
 
 ---
 
-Tal is a founder of Orbs Network (https://orbs.com). He's a passionate blockchain developer, open source advocate and a contributor to the TON ecosystem. He is also one of the main developers for TONcoin Fund (https://www.toncoin.fund). For Tal's work on TON, follow on GitHub (https://github.com/ton-defi-org). For Tal's personal work, follow on GitHub (https://github.com/talkol) and Twitter (https://twitter.com/koltal).
+Tal is a founder of Orbs Network (https://orbs.com). He's a passionate blockchain developer, open source advocate and a contributor to the TON ecosystem. He is also one of the main developers for TONcoin Fund (https://www.toncoin.fund). For Tal's work on TON, follow on GitHub (https://github.com/ton-defi-org). For Tal's personal work, follow on GitHub (https://github.com/talkol) and Twitter (https://twitter.com/koltal). If you found any mistakes in this post, please let Tal know on Telegram (https://t.me/talkol).
