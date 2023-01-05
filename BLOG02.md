@@ -44,7 +44,7 @@ Let's create a folder for our project and initialize it. From the command line, 
 1. `npm install func-js`, which installs [func-js](https://github.com/ton-community/func-js),  Wasm cross-platform compiler that can be invoked either programmatically or via a CLI.
 
 > Previously, we would have to deal with compiling or installing pre-compiled binaries of func and fift,
-> but func-js, which uses wasm, relieves us from this need.
+> but func-js, which uses Wasm, relieves us from this need.
 
 Now our environment
 ## Step 4: Structuring our smart contract
@@ -178,7 +178,7 @@ function initData() {
 
 Notice how the API of this TypeScript library mimics the standard library API in FunC.
 
-Now, that our two cells, init code and init data, are ready, we can calculate the future address of our deployed smart contract. Let's use the same TypeScript library:
+Now, that our two cells (init code and init data) are ready, we can calculate the future address of our deployed smart contract. Let's use the same TypeScript library:
 
 ```ts
 import fs from "fs";
@@ -207,7 +207,9 @@ const wallet = WalletContractV3R2.create({
 });
 ```
 
-To deploy, we will need RPC access to the TON blockchain in order to be able to interact with it over HTTP. TON Access is a library that will provide us with access to unthrottled API endpoints for achieving this. Let's install it:
+To deploy, we will need RPC access to the TON blockchain in order to be able to interact with it over HTTP. 
+TON Access is a library that will provide us with access to unthrottled API endpoints for achieving this. 
+Let's install it:
 
 ```
 npm install @orbs-network/ton-access
@@ -220,7 +222,7 @@ import { TonClient, SendMode } from "ton";
 import { getHttpEndpoint } from "@orbs-network/ton-access"
 
 const endpoint = await getHttpEndpoint({
-  network: "mainnet" // Or "testnet", according to your choice
+  network: "mainnet" // or "testnet", according to your choice
 });
 
 const client = new TonClient({ endpoint });
@@ -229,7 +231,7 @@ async function deploy() {
   const contract = client.open(wallet);
   const seqno = await contract.getSeqno(); // get the next seqno of our wallet
 
-  const transfer = await contract.createTransfer({
+  const transfer = contract.createTransfer({
     seqno,
     messages: [
       internal({
@@ -246,7 +248,6 @@ async function deploy() {
   await client.sendExternalMessage(wallet, transfer);
 }
 
-// invoke deploy()
 ```
 
 I'm aware that the deploy script seems partial and you probably haven't been running it yourself. Don't worry about it, since there's no reason you should be writing it yourself from scratch. I wrote a general purpose deploy script that you can use and I'll share it at the end of this post. My goal in this step was mostly to explain the process.
@@ -271,27 +272,26 @@ async function callGetter() {
 If getters are read-only, to perform a write and change contract state in storage, we must send a message. In our case we handled messages in `recv_internal()` and assigned op #1 = *increment*. The messages can be sent from any TON wallet, not necessarily the deployer wallet. Sending messages costs gas and requires payment in TON coin. The reason is that this call is not read-only, so it requires waiting for consensus by the validators and is stored as a transaction in a block on-chain for all eternity. Let's see the code in TypeScript:
 
 ```ts
-import { beginCell, SendMode, InternalMessage, tonNano, CommonMessageInfo, CellMessage } from "ton";
-
 async function sendMessage() {
   const messageBody = beginCell().storeUint(1, 32).storeUint(0, 64).endCell(); // op with value 1 (increment)
   
-  const seqno = await wallet.getSeqNo(); // get the next seqno of sender wallet
+  const contract = client.open(wallet);
+  const seqno = await contract.getSeqno(); // get the next seqno of our wallet
   
-  const transfer = wallet.createTransfer({
-    secretKey: key.secretKey, // from the secret mnemonic of the sender wallet
-    seqno: seqno,
-    sendMode: SendMode.PAY_GAS_SEPARATLY + SendMode.IGNORE_ERRORS,
-    order: new InternalMessage({
-      to: newContractAddress, // newContractAddress from deploy
-      value: toNano(0.02), // pay 0.02 TON as gas
-      bounce: false,
-      body: new CommonMessageInfo({
-        body: new CellMessage(messageBody),
+  const transfer = contract.createTransfer({
+    seqno,
+    messages: [
+      internal({
+        to: newContractAddress.toString(),
+        value: '0.02',
+        bounce: false,
+        body: messageBody
       }),
-    }),
+    ],
+    secretKey: key.secretKey,
+    sendMode: SendMode.PAY_GAS_SEPARATLY + SendMode.IGNORE_ERRORS,
   });
-  
+
   await client.sendExternalMessage(wallet, transfer);
 }
 ```
