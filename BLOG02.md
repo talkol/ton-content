@@ -13,7 +13,7 @@ In the world of blockchain, *code is law*, meaning that instead of lawyers and p
 Smart contracts are a key part of *decentralized apps* - a special type of application invented in the blockchain era, that does not depend on any single entity to run it. Unlike the app Uber, for example, which depends on the company Uber Inc to run it - a *decentralized Uber* would allow riders and drivers to interact (order, pay for and fulfill rides) without any intermediary. Dapps are also unstoppable - if we don't depend on anyone specific to run them, nobody can take them down.
 
 Dapps on TON blockchain are usually made of 3 main projects:
-* Smart contracts in the [FunC](https://ton.org/docs/#/func/overview) programming language that are deployed on-chain - these act as the "backend server" of the app, with a "database" for persistent storage
+* Smart contracts in the [FunC](https://ton.org/docs/develop/func/overview) programming language that are deployed on-chain - these act as the "backend server" of the app, with a "database" for persistent storage
 * Web frontend for interacting with the dapp from a web browser - this acts as the "frontend" or "client"
 * Telegram bot for interacting with the dapp from inside Telegram messenger - as TON is the blockchain of choice of the popular Telegram messenger, in-app interaction through chat is almost mandatory
 
@@ -35,11 +35,19 @@ Before we can start writing code, we need to install certain developer tools on 
 
 For convenience, our development environment will rely on several clever scripts for testing, compiling and deploying our code. The most convenient language for these scripts is JavaScript, executed by an engine called Nodejs. The installation instructions are [here](https://nodejs.org/). We will need a fairly recent version of node like `v16` or `v17`. You can verify your nodejs version by running `node -v` in terminal.
 
-The next pair of tools, `func` and `fift`, are required for compiling our smart contracts. These are command-line executables that are published as part of the official [TON code base](https://github.com/newton-blockchain/ton/tree/master/crypto/func). Building the two tools from source is a bit cumbersome, so the easiest way is to find somebody who has already built them for you - me! Take a look at my [ton-binaries](https://github.com/ton-defi-org/ton-binaries) repo and use it to download pre-built versions of `func` and `fift` for the operating system that you're using. Don't forget to make the tools executable, place them in path and setup `fiftlib` (see instructions in the repo). Make sure everything is working by running in terminal `fift -V` and `func -V`.
-
 Last but not least, you will need a decent IDE with FunC and TypeScript support. I recommend [Visual Studio Code](https://code.visualstudio.com/) - it's free and open source. Also install the [FunC Plugin](https://marketplace.visualstudio.com/items?itemName=tonwhales.func-vscode) to add syntax highlighting for the FunC language.
 
-## Step 3: Structuring our smart contract
+## Step 3: Setting up our project
+
+Let's create a folder for our project and initialize it. From the command line, in your folder run the following:
+1. `npm init es6 --yes`, which will initialize a project ready to work with npm packages for us.
+1. `npm install func-js`, which installs [func-js](https://github.com/ton-community/func-js),  Wasm cross-platform compiler that can be invoked either programmatically or via a CLI.
+
+> Previously, we would have to deal with compiling or installing pre-compiled binaries of func and fift,
+> but func-js, which uses wasm, relieves us from this need.
+
+Now our environment
+## Step 4: Structuring our smart contract
 
 Much like everything else in life, smart contracts in FunC are divided into 3 sections. These sections are: *storage*, *messages* and *getters*.
 
@@ -49,15 +57,15 @@ The **messages** section deals with messages sent to our contract. The main form
 
 The **getters** section deals with read-only interactions that don't change state. For example, we would want to allow users to query the value of our *counter*, so we can implement a getter for that. We've also mentioned that the contract has a special *owner*, so what about a getter to query that. Since our contract can hold money (TON coins), another useful getter could be to query the current balance.
 
-## Step 4: Counter contract in FunC
+## Step 5: Counter contract in FunC
 
 We're about to write our first lines in FunC! Our first task would be to implement the *counter* feature of our contract.
 
-The FunC programming language is very similar to the [C language](https://en.wikipedia.org/wiki/C_(programming_language)). It has strict types, which is a good idea, since compilation errors will help us spot contract mistakes early on. The language was designed specifically for TON blockchain, so you will not find a lot of documentation beyond the [official FunC docs](https://ton.org/docs/#/func).
+The FunC programming language is very similar to the [C language](https://en.wikipedia.org/wiki/C_(programming_language)). It has strict types, which is a good idea, since compilation errors will help us spot contract mistakes early on. The language was designed specifically for TON blockchain, so you will not find a lot of documentation beyond the [official FunC docs](https://ton.org/docs/develop/func/overview).
 
 ### Storage
 
-Let's start with the first section, *storage*, and implement two utility functions (which we will use later) for reading and writing variables to the contract's persistent state - `load_data()` and `save_data()`. The primary variable will be the counter value. We must persist this value to storage because we need to remember it between calls. The appropriate type for our counter variable is `int`. Notice [in the docs](https://ton.org/docs/#/func/types?id=atomic-types) that the `int` TVM runtime type is always 257 bit long (256 bit signed) so it can hold huge huge numbers - I'm pretty sure the universe has less than 2^256 atoms in it, so you'll never have a number so large that you can't fit in it. Storing the full 257 bits in blockchain storage is somewhat wasteful because the contract pays rent proportionally to the total amount of data it keeps. To optimize costs, let's keep in persistent storage just the lowest 64 bits - capping our counter's maximum value at 2^64 which should be enough:
+Let's start with the first section, *storage*, and implement two utility functions (which we will use later) for reading and writing variables to the contract's persistent state - `load_data()` and `save_data()`. The primary variable will be the counter value. We must persist this value to storage because we need to remember it between calls. The appropriate type for our counter variable is `int`. Notice [in the docs](https://ton.org/docs/develop/func/types#atomic-types) that the `int` TVM runtime type is always 257 bit long (256 bit signed) so it can hold huge huge numbers - I'm pretty sure the universe has less than 2^256 atoms in it, so you'll never have a number so large that you can't fit in it. Storing the full 257 bits in blockchain storage is somewhat wasteful because the contract pays rent proportionally to the total amount of data it keeps. To optimize costs, let's keep in persistent storage just the lowest 64 bits - capping our counter's maximum value at 2^64 which should be enough:
 
 ```
 (int) load_data() inline {                 ;; read function declaration - returns int as result
@@ -72,7 +80,7 @@ Let's start with the first section, *storage*, and implement two utility functio
 }
 ```
 
-The standard library functions `get_data()` and `set_data()` are documented [here](https://ton.org/docs/#/func/stdlib?id=persistent-storage-save-and-load) and load/store the storage cell. We will cover [*cells*](https://ton.org/docs/#/func/types?id=atomic-types) in detail in future posts of this series. Cells are read from using the [*slice*](https://ton.org/docs/#/func/types?id=atomic-types) type (an array of bits) and written to using the [*builder*](https://ton.org/docs/#/func/types?id=atomic-types) type. The various methods that you see are all taken from the [standard library](https://ton.org/docs/#/func/stdlib). Also notice two interesting function modifiers that appear in the declarations - [*inline*](https://ton.org/docs/#/func/functions?id=inline-specifier) and [*impure*](https://ton.org/docs/#/func/functions?id=impure-specifier).
+The standard library functions `get_data()` and `set_data()` are documented [here](https://ton.org/docs/develop/func/stdlib#persistent-storage-save-and-load) and load/store the storage cell. We will cover [*cells*](https://ton.org/docs/develop/func/types#atomic-types) in detail in future posts of this series. Cells are read from using the [*slice*](https://ton.org/docs/develop/func/types#atomic-types) type (an array of bits) and written to using the [*builder*](https://ton.org/docs/develop/func/types#atomic-types) type. The various methods that you see are all taken from the [standard library](https://ton.org/docs/develop/func/stdlib). Also notice two interesting function modifiers that appear in the declarations - [*inline*](https://ton.org/docs/develop/func/functions#inline-specifier) and [*impure*](https://ton.org/docs/develop/func/functions#impure-specifier).
 
 ### Messages
 
@@ -88,7 +96,7 @@ Let's continue to the next section, *messages*, and implement the main message h
 }
 ```
 
-As you can see, the first thing to do when parsing a new incoming message is to read its operation type. By convention, [internal messages](https://ton.org/docs/#/howto/smart-contract-guidelines?id=internal-messages) are encoded with a 32 bit unsigned int in the beginning that acts as operation type (op for short). We are free to assign any serial numbers we want to our different ops. In this case, we've assigned the number `1` to the *increment* action, which is handled by writing back to persistent state the current value counter plus 1.
+As you can see, the first thing to do when parsing a new incoming message is to read its operation type. By convention, [internal messages](https://ton.org/docs/develop/smart-contracts/guidelines/internal-messages) are encoded with a 32 bit unsigned int in the beginning that acts as operation type (op for short). We are free to assign any serial numbers we want to our different ops. In this case, we've assigned the number `1` to the *increment* action, which is handled by writing back to persistent state the current value counter plus 1.
 
 ### Getters
 
@@ -101,48 +109,42 @@ int counter() method_id {        ;; getter declaration - returns int as result
 }
 ```
 
-We can choose what input arguments the getter takes as input and what output it returns as result. Also notice the function modifier appearing in the declaration - [*method_id*](https://ton.org/docs/#/func/functions?id=method_id). It is customary to place `method_id` on all getters.
+We can choose what input arguments the getter takes as input and what output it returns as result. Also notice the function modifier appearing in the declaration - [*method_id*](https://ton.org/docs/develop/func/functions#method_id). It is customary to place `method_id` on all getters.
 
 That's it. We completed our 3 sections and the first version of our contract is ready. To get the complete code, simply concat the 3 snippets above to a single file named `counter.fc` and save it. This will be the FunC (`.fc` file extension) source file of our contract. The resulting source file should look something like [this](https://gist.github.com/talkol/fc354dd9560ecca9a6b112e5e39cd9ed).
 
-## Step 5: Building the counter contract
+## Step 6: Building the counter contract
 
-Right now, the contract is just FunC source code. To get it to run on-chain, we need to convert it to TVM [bytecode](https://ton.org/docs/#/smart-contracts/tvm-instructions/instructions). In TON, we don't usually compile FunC directly to bytecode, we pass through another programming language called [Fift](https://ton-blockchain.github.io/docs/fiftbase.pdf). Just like FunC, Fift is another language that was designed specifically for TON blockchain. It's a low level language that is very close to TVM opcodes. For us regular mortals, Fift is not very useful, so unless you're planning on some extra advanced things, I believe you can safely ignore it for now.
+Right now, the contract is just FunC source code. To get it to run on-chain, we need to convert it to TVM [bytecode](https://ton.org/docs/learn/tvm-instructions/instructions). 
 
-The first step of compilation is using the `func` compiler to generate a Fift file from our FunC file. To do that, we'll rely on the `func` executable installed in step 2 above. Open terminal and run:
+> In TON, we don't compile FunC directly to bytecode, but instead go through another programming language called [Fift](https://ton-blockchain.github.io/docs/fiftbase.pdf). Just like FunC, Fift is another language that was designed specifically for TON blockchain. It's a low level language that is very close to TVM opcodes. For us regular mortals, Fift is not very useful, so unless you're planning on some extra advanced things, I believe you can safely ignore it for now.
+
+The `func-js` wraps all the functionality needed in order to compile our contract to bytecode.
+Let's try to run it: 
 
 ```
-func -APS -o counter.fif counter.fc
+npx func-js counter.fc --boc counter.cell
 ```
 
 You'll notice that we immediately get a bunch of compilation errors on some function definitions missing like `set_data` and `begin_cell`. It's good practice to see what compilation errors look like. Indeed, our code relies on these standard library functions, but where are they defined? The foundation publishes these in the main TON repo in the file [stdlib.fc](https://github.com/newton-blockchain/ton/blob/master/crypto/smartcont/stdlib.fc). Since I've seen multiple versions of this file running around, it's good practice to download it and include it as part of your project.
 
-The `func` compiler supports taking multiple files as arguments, but we're going to do something better, we're going to concat all the source files ourselves. I believe this is a better choice because a big part of writing smart contracts is transparency over your code. When a user asks for your contract's source code, it's much more straightforward and deterministic to give them a single file with all dependencies already merged (or else you're likely to find yourself skipping files like `stdlib.fc` or forgetting to specify the link order).
+Let's go and save it to our folder:
 
 ```
-cat stdlib.fc counter.fc > counter.merged.fc
-func -APS -o counter.fif counter.merged.fc
-```
+curl https://raw.githubusercontent.com/newton-blockchain/ton/master/crypto/smartcont/stdlib.fc > stdlib.fc
+``` 
 
-The build should now succeed. The second step of compilation is generating the TVM bytecode from the recently created Fift file `counter.fif`. This is the only use we'll ever have for the Fift file we just created. The easiest way to accomplish this is to add one new line of Fift code right inside (the only line you'll need to know) to tell Fift runtime to output the bytecode to file. Edit `counter.fif` and add one line at the bottom:
-
-```
-// ... the existing fift code in the file goes here
-// this is the single line I added:
-boc>B "counter.cell" B>file
-```
-
-The result should look something like [this](https://gist.github.com/talkol/67186b1b585d0c3ec1f6223dd19a0fc5). Now, let's process the file with the `fift` executable that we installed in step 2. Run the following in terminal:
+The `func-js` compiler supports taking multiple files as arguments. Note that order matters in this case, so `stdlib.fc` needs to be processed before `counter.fc`, which relies on it:
 
 ```
-fift counter.fif
+npx func-js stdlib.fc counter.fc --boc counter.cell
 ```
 
-The output of this command is a new file - `counter.cell`. This is a binary file that finally contains the TVM bytecode in cell format that is ready to be deployed on-chain. This will actually be the only file we need for deployment moving forward (we won't need the FunC source file nor the Fift file).
+The build should now succeed, with the output of this command being a new file - `counter.cell`. This is a binary file that finally contains the TVM bytecode in cell format that is ready to be deployed on-chain. This will actually be the only file we need for deployment moving forward (we won't need the FunC source file).
 
 Don't worry if the build process feels a little complex and cumbersome, at the end of the post I'll give you a wonderful build script that does all of the above automatically.
 
-## Step 6: Deploying our contract on-chain
+## Step 7: Deploying our contract on-chain
 
 Now that our contract has been compiled to bytecode, we can finally see it in action running on-chain. The act of uploading the bytecode to the blockchain is called *deployment*. The deployment result would be an address where the contract resides. This address will allow us to communicate with this specific contract instance later on and send it transactions.
 
@@ -156,9 +158,14 @@ If we're confident in our code, there's no reason not to deploy to mainnet. The 
 
 The new address of our deployed contract in TON depends on only two things - the deployed bytecode and the initial contract storage. You can say that the address is some derivation of the hash of both. If two different developers were to deploy the exact same code with the exact same initialization data, they would collide.
 
-The bytecode part is easy, we have that ready as a cell in the file `counter.cell` that we compiled in step 5. Now what about the initial contract storage? As you recall, the format of our persistent storage data was decided when we implemented the function `save_data()` of our contract FunC source. Our storage layout was very simple - just one unsigned int of 64 bit holding the counter value. Therefore, to initialize our contract, we would need to generate a data cell holding some arbitrary initial uint64 value - let's say - the number `17`.
+The bytecode part is easy, we have that ready as a cell in the file `counter.cell` that we compiled in step 6. Now what about the initial contract storage? As you recall, the format of our persistent storage data was decided when we implemented the function `save_data()` of our contract FunC source. Our storage layout was very simple - just one unsigned int of 64 bit holding the counter value. Therefore, to initialize our contract, we would need to generate a data cell holding some arbitrary initial uint64 value - let's say - the number `17`.
 
-I found it easiest to perform the deployment in JavaScript (TypeScript actually). Let's create this data cell in code and use a very convenient TypeScript library called [ton](https://www.npmjs.com/package/ton) for the task:
+I found it easiest to perform the deployment in JavaScript (TypeScript actually). Let's create this data cell in code and use a very convenient TypeScript library called [ton](https://www.npmjs.com/package/ton) for the task.
+
+Let's install it:
+```
+npm install ton
+```
 
 ```ts
 import { beginCell } from "ton";
@@ -178,70 +185,84 @@ import fs from "fs";
 import { contractAddress, Cell } from "ton";
 
 const initDataCell = initData(); // the function we've implemented just now
-const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // compilation output from step 5
+const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // compilation output from step 6
 
-const newContractAddress = contractAddress({ workchain: 0, initialData: initDataCell, initialCode: initCodeCell });
+const newContractAddress = contractAddress(0, {code: initCodeCell, data: initDataCell});
 ```
 
 ### Deployment script
 
-The actual deployment involves sending a special message that will deploy our contract. The deployment is going to cost gas and should be done through a wallet. I'm assuming that you have some familiarity with TON wallets and how they're derived from 24 word secret mnemonics. If not, read [this](https://ton.org/docs/#/howto/payment-processing). Let's assume that you already have a TON wallet (holding at least 0.5 TON coin for gas) and that its secret mnemonic is `mad nation chief flavor ...`
+The actual deployment involves sending a special message that will deploy our contract. The deployment is going to cost gas and should be done through a wallet. I'm assuming that you have some familiarity with TON wallets and how they're derived from 24 word secret mnemonics. If not, read [this](https://ton.org/docs/develop/dapps/asset-processing/). Let's assume that you already have a TON wallet (holding at least 0.5 TON coin for gas) and that its secret mnemonic is `mad nation chief flavor ...`
 
 ```ts
 import { mnemonicToWalletKey } from "ton-crypto";
-import { TonClient, WalletContract, WalletV3R2Source } from "ton";
+import { WalletContractV3R2 } from "ton";
 
 const mnemonic = "mad nation chief flavor ..."; // your 24 secret words
 const key = await mnemonicToWalletKey(mnemonic.split(" "));
 
-const client = new TonClient({ endpoint: "https://toncenter.com/api/v2/jsonRPC" });
-const wallet = WalletContract.create(client, WalletV3R2Source.create({ publicKey: key.publicKey, workchain: 0 }));
+const wallet = WalletContractV3R2.create({
+  publicKey: key.publicKey,
+  workchain: 0,
+});
 ```
 
-Notice that if you're working on testnet, the endpoint for the client should be `testnet.toncenter.com/api/v2/jsonRPC` instead. Now that we also have our wallet ready, we can finally send the deploy message:
+To deploy, we will need RPC access to the TON blockchain in order to be able to interact with it over HTTP. TON Access is a library that will provide us with access to unthrottled API endpoints for achieving this. Let's install it:
+
+```
+npm install @orbs-network/ton-access
+```
+
+Now that we also have our wallet ready, we can finally send the deploy message:
 
 ```ts
-import { SendMode, InternalMessage, tonNano, CommonMessageInfo, StateInit } from "ton";
+import { TonClient, SendMode } from "ton";
+import { getHttpEndpoint } from "@orbs-network/ton-access"
+
+const endpoint = await getHttpEndpoint({
+  network: "mainnet" // Or "testnet", according to your choice
+});
+
+const client = new TonClient({ endpoint });
 
 async function deploy() {
-  const seqno = await wallet.getSeqNo(); // get the next seqno of our wallet
-  
-  const transfer = wallet.createTransfer({
-    secretKey: key.secretKey, // from the secret mnemonic of the deployer wallet
-    seqno: seqno,
-    sendMode: SendMode.PAY_GAS_SEPARATLY + SendMode.IGNORE_ERRORS,
-    order: new InternalMessage({
-      to: newContractAddress, // calculated before
-      value: tonNano(0.02), // fund the new contract with 0.02 TON to pay rent
-      bounce: false,
-      body: new CommonMessageInfo({
-        stateInit: new StateInit({ data: initDataCell, code: initCodeCell }), // calculated before
-        body: null,
+  const contract = client.open(wallet);
+  const seqno = await contract.getSeqno(); // get the next seqno of our wallet
+
+  const transfer = await contract.createTransfer({
+    seqno,
+    messages: [
+      internal({
+        to: newContractAddress.toString(),
+        value: '0.02',
+        init: { data: initDataCell, code: initCodeCell },
+        bounce: false,
       }),
-    }),
+    ],
+    secretKey: key.secretKey,
+    sendMode: SendMode.PAY_GAS_SEPARATLY + SendMode.IGNORE_ERRORS,
   });
-  
+
   await client.sendExternalMessage(wallet, transfer);
 }
+
+// invoke deploy()
 ```
 
 I'm aware that the deploy script seems partial and you probably haven't been running it yourself. Don't worry about it, since there's no reason you should be writing it yourself from scratch. I wrote a general purpose deploy script that you can use and I'll share it at the end of this post. My goal in this step was mostly to explain the process.
 
 ## Step 7: Interacting with the deployed contract
 
-After the contract is deployed, it's always nice to examine it on a block explorer. Take the value of the variable `newContractAddress` from the TypeScript script above and provide it to https://tonwhales.com/explorer (or the [testnet](https://test.tonwhales.com/explorer) version). Review the displayed page. If *Contract Type* is "unknown contract" and *State* is "active", your contract was deployed successfully.
+After the contract is deployed, it's always nice to examine it on a block explorer. Take the value of the variable `newContractAddress` from the TypeScript script above and provide it to https://tonscan.org (or the [testnet](https://testnet.tonscan.org) version). Review the displayed page. If *Contract Type* is "unknown contract" and *State* is "active", your contract was deployed successfully.
 
 ### Call a getter
 
 The first interaction we'll do is call a getter. In our case we just have one getter - the `counter()` method. Calling a getter is free and does not cost gas. The reason is that this call is read-only, so it does not require consensus by the validators and is not stored in a block on-chain for all eternity. The natural place to make this call is from TypeScript:
 
 ```ts
-import { TupleSlice } from "ton";
-
 async function callGetter() {
   const call = await client.callGetMethod(newContractAddress, "counter"); // newContractAddress from deploy
-  const counterValue = new TupleSlice(call.stack).readBigNumber();
-  console.log(`counter value is ${counter.toString()}`);
+  console.log(`Counter value is ${call.stack.readBigNumber().toString()}`);
 }
 ```
 
