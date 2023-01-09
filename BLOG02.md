@@ -168,7 +168,7 @@ npm install ton
 ```
 
 ```ts
-import { beginCell } from "ton";
+import { beginCell } from "ton-core";
 
 function initData() {
   const initialCounterValue = 17;
@@ -182,7 +182,7 @@ Now, that our two cells (init code and init data) are ready, we can calculate th
 
 ```ts
 import fs from "fs";
-import { contractAddress, Cell } from "ton";
+import { contractAddress, Cell } from "ton-core";
 
 const initDataCell = initData(); // the function we've implemented just now
 const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // compilation output from step 6
