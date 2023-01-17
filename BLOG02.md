@@ -1,6 +1,6 @@
 # TON Hello World: Step by step guide for writing your first smart contract in FunC (part 1)
 
-*by Tal Kol*
+*by Tal Kol and Shahar Yakir*
 
 ---
 
@@ -39,14 +39,22 @@ Last but not least, you will need a decent IDE with FunC and TypeScript support.
 
 ## Step 3: Setting up our project
 
-Let's create a folder for our project and initialize it. From the command line, in your folder run the following:
-1. `npm init es6 --yes`, which will initialize a project ready to work with npm packages for us.
-1. `npm install func-js`, which installs [func-js](https://github.com/ton-community/func-js),  Wasm cross-platform compiler that can be invoked either programmatically or via a CLI.
+Let's create a new directory for our project and initialize it. Open terminal in the project directory and run the following:
 
-> Previously, we would have to deal with compiling or installing pre-compiled binaries of func and fift,
-> but func-js, which uses Wasm, relieves us from this need.
+```
+npm init es6 --yes
+```
 
-Now our environment
+This will initialize a new nodejs project and allow us to work with [npm](https://www.npmjs.com/) packages.
+
+```
+npm install @ton-community/func-js
+```
+
+This will install the package [func-js](https://github.com/ton-community/func-js), a cross-platform compiler for FunC.
+
+> In previous iterations of this tutorial we used to deal with [binaries executables](https://github.com/ton-defi-org/ton-binaries) of the `func` and `fift` compilers, but those were platform specific (different binaries for Mac, Windows and Linux). Relying on func-js will make life easier since it's cross-platform.
+
 ## Step 4: Structuring our smart contract
 
 Much like everything else in life, smart contracts in FunC are divided into 3 sections. These sections are: *storage*, *messages* and *getters*.
@@ -117,32 +125,25 @@ That's it. We completed our 3 sections and the first version of our contract is 
 
 Right now, the contract is just FunC source code. To get it to run on-chain, we need to convert it to TVM [bytecode](https://ton.org/docs/learn/tvm-instructions/instructions). 
 
-> In TON, we don't compile FunC directly to bytecode, but instead go through another programming language called [Fift](https://ton-blockchain.github.io/docs/fiftbase.pdf). Just like FunC, Fift is another language that was designed specifically for TON blockchain. It's a low level language that is very close to TVM opcodes. For us regular mortals, Fift is not very useful, so unless you're planning on some extra advanced things, I believe you can safely ignore it for now.
+In TON, we don't compile FunC directly to bytecode, but instead go through another programming language called [Fift](https://ton-blockchain.github.io/docs/fiftbase.pdf). Just like FunC, Fift is another language that was designed specifically for TON blockchain. It's a low level language that is very close to TVM opcodes. For us regular mortals, Fift is not very useful, so unless you're planning on some extra advanced things, I believe you can safely ignore it for now.
 
-The `func-js` wraps all the functionality needed in order to compile our contract to bytecode.
-Let's try to run it: 
+The func-js package contains everything we need to compile our contract to bytecode. To use it, open terminal in the project directory and run the following:
 
 ```
 npx func-js counter.fc --boc counter.cell
 ```
 
-You'll notice that we immediately get a bunch of compilation errors on some function definitions missing like `set_data` and `begin_cell`. It's good practice to see what compilation errors look like. Indeed, our code relies on these standard library functions, but where are they defined? The foundation publishes these in the main TON repo in the file [stdlib.fc](https://github.com/newton-blockchain/ton/blob/master/crypto/smartcont/stdlib.fc). Since I've seen multiple versions of this file running around, it's good practice to download it and include it as part of your project.
+You'll notice that we immediately get a bunch of compilation errors on some function definitions missing like `set_data` and `begin_cell`. It's good practice to see what compilation errors look like. Indeed, our code relies on these standard library functions, but where are they defined? The TON foundation publishes these in the main TON repo in the file [stdlib.fc](https://github.com/ton-blockchain/ton/blob/master/crypto/smartcont/stdlib.fc). Since I've seen multiple versions of this file running around, it's good practice to download it and include it as part of your project.
 
-Let's go and save it to our folder:
+Download [stdlib.fc](https://raw.githubusercontent.com/ton-blockchain/ton/master/crypto/smartcont/stdlib.fc) and save it in the project directory. 
 
-```
-curl https://raw.githubusercontent.com/newton-blockchain/ton/master/crypto/smartcont/stdlib.fc > stdlib.fc
-``` 
-
-The `func-js` compiler supports taking multiple files as arguments. Note that order matters in this case, so `stdlib.fc` needs to be processed before `counter.fc`, which relies on it:
+The func-js compiler supports taking multiple input files as arguments. Note that order matters in this case, so `stdlib.fc` needs to be appear before `counter.fc` which relies on it:
 
 ```
 npx func-js stdlib.fc counter.fc --boc counter.cell
 ```
 
 The build should now succeed, with the output of this command being a new file - `counter.cell`. This is a binary file that finally contains the TVM bytecode in cell format that is ready to be deployed on-chain. This will actually be the only file we need for deployment moving forward (we won't need the FunC source file).
-
-Don't worry if the build process feels a little complex and cumbersome, at the end of the post I'll give you a wonderful build script that does all of the above automatically.
 
 ## Step 7: Deploying our contract on-chain
 
@@ -156,19 +157,22 @@ If we're confident in our code, there's no reason not to deploy to mainnet. The 
 
 ### Init arguments
 
-The new address of our deployed contract in TON depends on only two things - the deployed bytecode and the initial contract storage. You can say that the address is some derivation of the hash of both. If two different developers were to deploy the exact same code with the exact same initialization data, they would collide.
+The new address of our deployed contract in TON depends on only two things - the deployed bytecode (initial code) and the initial contract storage (initial data). You can say that the address is some derivation of the hash of both. If two different developers were to deploy the exact same code with the exact same initialization data, they would collide.
 
 The bytecode part is easy, we have that ready as a cell in the file `counter.cell` that we compiled in step 6. Now what about the initial contract storage? As you recall, the format of our persistent storage data was decided when we implemented the function `save_data()` of our contract FunC source. Our storage layout was very simple - just one unsigned int of 64 bit holding the counter value. Therefore, to initialize our contract, we would need to generate a data cell holding some arbitrary initial uint64 value - let's say - the number `17`.
 
 I found it easiest to perform the deployment in JavaScript (TypeScript actually). Let's create this data cell in code and use a very convenient TypeScript library called [ton](https://www.npmjs.com/package/ton) for the task.
 
-Let's install it:
+Install the package by opening terminal in the project directory and running:
+
 ```
-npm install ton
+npm install ton ton-crypto ton-core
 ```
 
+Now create the file `deploy.js` in the project directory and use the following code to create the initial data cell:
+
 ```ts
-import { beginCell } from "ton-core";
+import { beginCell } from "ton";
 
 function initData() {
   const initialCounterValue = 17;
@@ -176,29 +180,44 @@ function initData() {
 }
 ```
 
-Notice how the API of this TypeScript library mimics the standard library API in FunC.
+Notice how the API of this TypeScript library mimics the standard library API in FunC. Another good tip is to change the number `17` to some random number. Since this tutorial is used by multiple people, if you rely on the exact same code with the exact same initial data cell as others, you may collide with them and reach a contract address that somebody else had already deployed.
 
-Now, that our two cells (init code and init data) are ready, we can calculate the future address of our deployed smart contract. Let's use the same TypeScript library:
+Now, that our two cells (initial code and initial data) are ready, we can calculate the future address of our deployed smart contract. Let's use the same TypeScript library:
 
 ```ts
 import fs from "fs";
-import { contractAddress, Cell } from "ton-core";
+import { contractAddress, Cell } from "ton";
 
 const initDataCell = initData(); // the function we've implemented just now
 const initCodeCell = Cell.fromBoc(fs.readFileSync("counter.cell"))[0]; // compilation output from step 6
 
 const newContractAddress = contractAddress(0, {code: initCodeCell, data: initDataCell});
+console.log(newContractAddress);
 ```
+
+Combine the snippets above into `deploy.js` and run it using terminal:
+
+```
+node deploy.js
+```
+
+You can use an explorer like [tonscan.org](https://tonscan.org) (or the [testnet](https://testnet.tonscan.org) version) to check if this contract address is already deployed or not.
 
 ### Deployment script
 
-The actual deployment involves sending a special message that will deploy our contract. The deployment is going to cost gas and should be done through a wallet. I'm assuming that you have some familiarity with TON wallets and how they're derived from 24 word secret mnemonics. If not, read [this](https://ton.org/docs/develop/dapps/asset-processing/). Let's assume that you already have a TON wallet (holding at least 0.5 TON coin for gas) and that its secret mnemonic is `mad nation chief flavor ...`
+The actual deployment involves sending a special message that will deploy our contract. The deployment is going to cost gas and should be done through a wallet. I'm assuming that you have some familiarity with TON wallets and how they're derived from 24 word secret mnemonics. If not, use [TonKeeper](https://tonkeeper.com) to create a wallet on mainnet or use [Ton Web Wallet](https://wallet.ton.org/?testnet=true) to create a wallet on testnet.
+
+Notice that TON wallets can come in multiple versions. The code below relies on wallet version v3R2. [TonKeeper](https://tonkeeper.com) lets you change the wallet version in the Settings tab under "Active address". [Ton Web Wallet](https://wallet.ton.org/?testnet=true) only supported v3R2 the last time I checked. If you want to learn more about wallet versions and how to access them in JavaScript, read [this post](https://blog.ton.org/how-ton-wallets-work-and-how-to-access-them-from-javascript).
+
+Let's assume that your TON wallet is version v3R2, that it is holding at least 0.5 TON coin for gas and that its secret mnemonic is `mad nation chief flavor ...`
+
+Add the following code to `deploy.js` to operate the wallet from JavaScript:
 
 ```ts
 import { mnemonicToWalletKey } from "ton-crypto";
 import { WalletContractV3R2 } from "ton";
 
-const mnemonic = "mad nation chief flavor ..."; // your 24 secret words
+const mnemonic = "mad nation chief flavor ..."; // your 24 secret words (replace ... with the rest of the words)
 const key = await mnemonicToWalletKey(mnemonic.split(" "));
 
 const wallet = WalletContractV3R2.create({
@@ -207,32 +226,31 @@ const wallet = WalletContractV3R2.create({
 });
 ```
 
-To deploy, we will need RPC access to the TON blockchain in order to be able to interact with it over HTTP. 
-TON Access is a library that will provide us with access to unthrottled API endpoints for achieving this. 
-Let's install it:
+To deploy, we will need RPC access to TON blockchain in order to be able to interact with the blockchain over HTTP. [TON Access](https://orbs.com/ton-access) is an awesome library that will provide us with unthrottled API access for free. 
+
+Install it by opening terminal in the project directory and running:
 
 ```
 npm install @orbs-network/ton-access
 ```
 
-Now that we also have our wallet ready, we can finally send the deploy message:
+Now with our wallet ready, we can finally complete `deploy.js` and send the deploy message:
 
 ```ts
-import { TonClient } from "ton";
-import { internal, SendMode } from "ton-core";
 import { getHttpEndpoint } from "@orbs-network/ton-access"
-
-const endpoint = await getHttpEndpoint({
-  network: "mainnet" // or "testnet", according to your choice
-});
-
-const client = new TonClient({ endpoint });
+import { TonClient, internal, SendMode } from "ton";
 
 async function deploy() {
-  const contract = client.open(wallet);
-  const seqno = await contract.getSeqno(); // get the next seqno of our wallet
+  const endpoint = await getHttpEndpoint({
+    network: "mainnet" // or "testnet", according to your choice
+  });
 
-  const transfer = contract.createTransfer({
+  const client = new TonClient({ endpoint });
+
+  const walletContract = client.open(wallet);
+  const seqno = await walletContract.getSeqno(); // get the next seqno of our wallet
+
+  const transfer = walletContract.createTransfer({
     seqno,
     messages: [
       internal({
@@ -249,17 +267,26 @@ async function deploy() {
   await client.sendExternalMessage(wallet, transfer);
 }
 
+deploy();
+```
+
+To run the completed `deploy.js` use terminal once again:
+
+```
+node deploy.js
 ```
 
 I'm aware that the deploy script seems partial and you probably haven't been running it yourself. Don't worry about it, since there's no reason you should be writing it yourself from scratch. I wrote a general purpose deploy script that you can use and I'll share it at the end of this post. My goal in this step was mostly to explain the process.
 
 ## Step 7: Interacting with the deployed contract
 
-After the contract is deployed, it's always nice to examine it on a block explorer. Take the value of the variable `newContractAddress` from the TypeScript script above and provide it to https://tonscan.org (or the [testnet](https://testnet.tonscan.org) version). Review the displayed page. If *Contract Type* is "unknown contract" and *State* is "active", your contract was deployed successfully.
+After the contract is deployed, it's always nice to examine it on a block explorer. Take the value of the variable `newContractAddress` from the TypeScript script above and provide it to [tonscan.org](https://tonscan.org) (or the [testnet](https://testnet.tonscan.org) version). Review the displayed page. If *Contract Type* is "unknown contract" and *State* is "active", your contract was deployed successfully.
 
 ### Call a getter
 
-The first interaction we'll do is call a getter. In our case we just have one getter - the `counter()` method. Calling a getter is free and does not cost gas. The reason is that this call is read-only, so it does not require consensus by the validators and is not stored in a block on-chain for all eternity. The natural place to make this call is from TypeScript:
+The first interaction we'll do is call a getter. In our case we just have one getter - the `counter()` method. Calling a getter is free and does not cost gas. The reason is that this call is read-only, so it does not require consensus by the validators and is not stored in a block on-chain for all eternity. The natural place to make this call is from TypeScript.
+
+Create a new file `interact.js` with the following content:
 
 ```ts
 async function callGetter() {
@@ -268,9 +295,19 @@ async function callGetter() {
 }
 ```
 
+Notice that some of the variables like `client` and `newContractAddress` need to be initialized in the same way they were initialized in `deploy.js` so copy their initialization code over.
+
+Like before, run the script with terminal:
+
+```
+node interact.js
+```
+
 ### Send a message
 
-If getters are read-only, to perform a write and change contract state in storage, we must send a message. In our case we handled messages in `recv_internal()` and assigned op #1 = *increment*. The messages can be sent from any TON wallet, not necessarily the deployer wallet. Sending messages costs gas and requires payment in TON coin. The reason is that this call is not read-only, so it requires waiting for consensus by the validators and is stored as a transaction in a block on-chain for all eternity. Let's see the code in TypeScript:
+If getters are read-only, to perform a write and change contract state in storage, we must send a message. In our case we handled messages in `recv_internal()` and assigned op #1 = *increment*. The messages can be sent from any TON wallet, not necessarily the deployer wallet. Sending messages costs gas and requires payment in TON coin. The reason is that this call is not read-only, so it requires waiting for consensus by the validators and is stored as a transaction in a block on-chain for all eternity.
+
+Let's see the code in TypeScript. Add the following to `interact.js`:
 
 ```ts
 async function sendMessage() {
