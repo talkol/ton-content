@@ -313,10 +313,10 @@ Let's see the code in TypeScript. Add the following to `interact.js`:
 async function sendMessage() {
   const messageBody = beginCell().storeUint(1, 32).storeUint(0, 64).endCell(); // op with value 1 (increment)
   
-  const contract = client.open(wallet);
-  const seqno = await contract.getSeqno(); // get the next seqno of our wallet
+  const walletContract = client.open(wallet);
+  const seqno = await walletContract.getSeqno(); // get the next seqno of our wallet
   
-  const transfer = contract.createTransfer({
+  const transfer = walletContract.createTransfer({
     seqno,
     messages: [
       internal({
