@@ -237,7 +237,7 @@ npm install @orbs-network/ton-access
 Now with our wallet ready, we can finally complete `deploy.js` and send the deploy message:
 
 ```ts
-import { getHttpEndpoint } from "@orbs-network/ton-access"
+import { getHttpEndpoint } from "@orbs-network/ton-access";
 import { TonClient, internal, SendMode } from "ton";
 
 async function deploy() {
