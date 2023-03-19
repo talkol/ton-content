@@ -72,7 +72,7 @@ After sending a transaction, a user must wait until this transaction is included
 
 In this post we mostly covered what blockchain is and defined a lot of the terminology involved. It sounds like an awful lot of trouble to achieve abstract benefits like *decentralization* and *trustlessness*. Can we give a more practical example where blockchain can improve your life?
 
-Back in 2018 I wrote a well received 2-part post series about this very topic. Part 1 is ["How a Blockchain Can Help You on a Deserted Island"](https://talkol.medium.com/why-decentralized-consensus-blockchain-is-good-for-business-5ff263468210) and part 2 is ["How to Run a Blockchain on a Deserted Island with Pen and Paper"](https://talkol.medium.com/how-to-run-a-blockchain-on-a-deserted-island-with-pen-and-paper-899949ec555b). If you like the old TV series ["Lost"](https://www.imdb.com/title/tt0411008/), give it a read, I'm sure that you'll enjoy it.
+Back in 2018 I wrote a well received 2-part post series about this very topic. Part 1 is ["How a Blockchain Can Help You on a Deserted Island"](https://talkol.medium.com/why-decentralized-consensus-blockchain-is-good-for-business-5ff263468210) and part 2 is ["How to Run a Blockchain on a Deserted Island with Pen and Paper"](https://talkol.medium.com/how-to-run-a-blockchain-on-a-deserted-island-with-pen-and-paper-899949ec555b). If you like the old TV series [Lost](https://www.imdb.com/title/tt0411008/), give it a read, I'm sure that you'll enjoy it.
 
 Happy coding!
 
