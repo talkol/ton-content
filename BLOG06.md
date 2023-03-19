@@ -46,7 +46,7 @@ Being a network validator is usually hard work. You need to run the ***blockchai
 
 We said earlier that blockchains are economies. The equipment for network validators is not free, so they must be paid for their efforts. Payment naturally takes place with the token of the blockchain. On the TON blockchain, users pay fees using the TON coin. TON network validators earn TON coin for performing the validation process and executing all the apps that are running on the blockchain.
 
-When a user is performing some action on the blockchain, they must send a ***transaction***. The transaction includes a fee payment called ***gas***. The analogy comes from cars. Just like a car needs gas to execute its purpose, so does a blockchain transaction. Users must ***sign*** transactions using their blockchain ***wallets***. This signature guarantees that only the owner of the wallet can authorize the payment of gas and sending the transaction.
+When a user is performing some action on the blockchain, they must send a ***transaction***. The transaction includes a fee payment called ***gas***. The analogy comes from cars. Just like a car needs gas to run, so does a blockchain transaction. Users must ***sign*** transactions using their blockchain ***wallets***. This signature guarantees that only the owner of the wallet can authorize the payment of gas and sending the transaction.
 
 ## Dapps
 
