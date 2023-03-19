@@ -67,3 +67,15 @@ After the developer finished writing the smart contract, the act of publishing t
 We said earlier that network validators must vote on the execution result of every transaction. To streamline this process, groups of transactions are batched together in ***blocks***. Every block of transactions gets its own ***block number*** and undergoes the consensus process where a majority of network validators is required to approve it. When you order all the blocks one after the other you get a chain of blocks, this is the source of the word ***blockchain***.
 
 After sending a transaction, a user must wait until this transaction is included in a block. A new block on TON blockchain is created every 5 seconds on average. Users can inspect transactions, check if they succeeded or not and see which block they were added to by using a tool called a ***block explorer***, or an [explorer](https://tonscan.org) for short.
+
+## So what is blockchain good for?
+
+In this post we mostly covered what blockchain is. It sounds like an awful lot of trouble to achieve abstract benefits like *decentralization* and *trustlessness*. Can we give a more practical example where blockchain can improve your life?
+
+Back in 2018 I wrote a well received 2-part post series about this very topic. Part 1 is ["How a Blockchain Can Help You on a Deserted Island"](https://talkol.medium.com/why-decentralized-consensus-blockchain-is-good-for-business-5ff263468210) and part 2 is ["How to Run a Blockchain on a Deserted Island with Pen and Paper"](https://talkol.medium.com/how-to-run-a-blockchain-on-a-deserted-island-with-pen-and-paper-899949ec555b). If you like the old TV series ["Lost"](https://www.imdb.com/title/tt0411008/), give it a read, I'm sure that you'll enjoy it.
+
+Happy coding!
+
+---
+
+*Tal is a founder of [Orbs Network](https://orbs.com). He's a passionate blockchain developer, open source advocate and a contributor to the TON ecosystem. He is also one of the main developers for [TONcoin Fund](https://www.toncoin.fund). Follow Tal on [GitHub](https://github.com/talkol) and [Twitter](https://twitter.com/koltal). If you found any mistakes in this post, please let Tal know on [Telegram](https://t.me/talkol).*
