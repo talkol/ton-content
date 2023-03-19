@@ -50,7 +50,7 @@ When a user is performing some action on the blockchain, they must send a ***tra
 
 ## Dapps
 
-We said earlier that the purpose of blockchains is to run decentralized backends. A simpler name for these services that run on the blockchain network is *apps* - decentralized apps to be exact or ***dapps*** for short. Developers create dapps and have network validators execute them. Users interact with dapps by sending them transactions. The developer of a dapp is equal to the dapp's users. They should have no special priviliges since the app is decentralized.
+We said earlier that the purpose of blockchains is to run decentralized backends. A simpler name for these services that run on the blockchain network is *apps* - decentralized apps to be exact or ***dapps*** for short. Developers create dapps and have network validators execute them. Users interact with dapps by sending them transactions. The developer of a dapp is equal to the dapp's users. The developer should have no special priviliges since the app is decentralized.
 
 Let's reiterate over the last point with an example. Let's take a Web2 service like Google Search. The developer of the service, Google, ranks search results for the benefit of users. Google enjoys this position of power and is allowed to promote its own products in search results, like Google Drive, over competitors like Dropbox. In a Web3 version of Google Search, the developer of the service will not be allowed to promote their own products in search.
 
