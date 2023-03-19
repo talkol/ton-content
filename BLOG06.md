@@ -59,3 +59,11 @@ Let's reiterate over the last point with an example. Let's take a Web2 service l
 Every Web2 service like Google Search has terms of service. If a user feels that they were wronged under these terms, they can sue and ask a judge to rule on the dispute. Web3 is decentralized and cannot have centralized sources of authority like judges. On blockchain, code is law. The code of the dapp is the only agreement between its users. Unlike traditional legal agreements, this agreement is not open to interpretation. Code always executes in the same way.
 
 Blockchain replaces legal contracts with code. The code of the dapp is therefore called a ***smart contract***. Before users decide to participate in a dapp, by sending it transactions for example, they are expected to review the dapp's source code to understand its terms. Just like you wouldn't sign a lease contract for your apartment without reading the contract, you should not sign a transaction without reviewing the smart contract. Since not all users are tech savvy enough to do this, communities often rely on each other for this purpose.
+
+After the developer finished writing the smart contract, the act of publishing this contract to the blockchain is called ***deployment***. The contract code is deployed on to the chain where everybody can find it by its ***contract address***.
+
+## Blocks and explorers
+
+We said earlier that network validators must vote on the execution result of every transaction. To streamline this process, groups of transactions are batched together in ***blocks***. Every block of transactions gets its own ***block number*** and undergoes the consensus process where a majority of network validators is required to approve it. When you order all the blocks one after the other you get a chain of blocks, this is the source of the word ***blockchain***.
+
+After sending a transaction, a user must wait until this transaction is included in a block. A new block on TON blockchain is created every 5 seconds on average. Users can inspect transactions, check if they succeeded or not and see which block they were added to by using a tool called a ***block explorer***, or an *explorer* for short.
