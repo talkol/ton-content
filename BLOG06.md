@@ -34,7 +34,7 @@ Collaboration is governed by ***consensus***. For an execution result to hold tr
 
 We mentioned that execution results require voting. How does it work? Is it one user one vote like in democratic elections? It turns out that this doesn't work on the Internet due to something known as the [Sybil attack](https://en.wikipedia.org/wiki/Sybil_attack). It is very easy to create fake users on the Internet. Since Web3 is decentralized, we can't have a centralized source of authority that decides who's fake and who's real.
 
-A popular decentralized solution to this problem is to revolve voting rights around a ***token***. If you own 10 tokens, you have 10 votes. The TON blockchain revolves around [TON coin](https://coinmarketcap.com/currencies/toncoin/). The Ethereum blockchain revolves around [Ether](https://coinmarketcap.com/currencies/ethereum/). This means that most blockchains are also an economies. The tokens acts as an incentivization tool to make sure that the decentralized community is all pulling in the same direction.
+A popular decentralized solution to this problem is to revolve voting rights around a ***token***. If you own 10 tokens, you have 10 votes. The TON blockchain revolves around [TON coin](https://coinmarketcap.com/currencies/toncoin/). The Ethereum blockchain revolves around [Ether](https://coinmarketcap.com/currencies/ethereum/). This means that almost all blockchains are also economies. The token acts as an incentivization tool to make sure that the decentralized community is all pulling in the same direction.
 
 ## Network validators
 
