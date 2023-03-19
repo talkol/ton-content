@@ -40,7 +40,7 @@ A popular decentralized solution to this problem is to revolve voting rights aro
 
 All blockchains are networks because they are operated by a group of users. Users that do the heavy lifting of operating the network and actively participate in the consensus process are called ***validators***. The voting weight of every validator is proportional to the amount of tokens it holds. To keep validators honest, they are normally required to put their tokens **at stake**. If the consensus deems that a validator is dishonest, their tokens will be taken away as punishment. This governance process is called ***proof-of-stake***.
 
-Being a network validator is usually hard work. You need to run the ***blockchain node*** code on a server that you own and stake it with a lot of tokens. Smaller users that want to participate but don't have enough tokens to warrant going to all this effort can often delegate their tokens to one of the validators. They are called ***nominators***.
+Being a network validator is usually hard work. You need to run the ***blockchain node*** code on a server that you own and stake it with a lot of tokens. Smaller users that want to participate but don't have enough tokens to warrant going to all this effort can often delegate their tokens to one of the validators. These participants are called ***nominators***.
 
 ## Gas fees
 
