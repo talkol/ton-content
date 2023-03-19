@@ -16,7 +16,7 @@ Centralization is based on ***trust***. Users allow Google to maintain a positio
 
 ## The new Internet (Web3)
 
-Many of us view the Internet as a common good. We see it as a tool that turns the world into a global village. A tools that allows users to communicate and form communities. As such, we would like to see a shift of power from corporations to users. Web3 is the implementation of this ideal, what we would like to see as the next stage of evolution of the Internet.
+Many of us view the Internet as a common good. We see it as a tool that turns the world into a global village. A tool that allows users to communicate and form communities. As such, we would like to see a shift of power from corporations to users. Web3 is the implementation of this ideal, what we would like to see as the next stage of evolution of the Internet.
 
 Under this ideal, you, as a user of a Web3 service, must be inherently equal to the creator of the service. We call this property ***decentralization***. Decentralized services provide users with true ownership. This is not only true for data, but also for assets. Decentralized assets like your Bitcoins or your TON coins are yours, and nobody can take them away from you. Decentralized services are also ***permissionless***, meaning that to transfer your TON coin to somebody else requires nobody's permission but your own. Nobody can stop this from happening or censor you.
 
