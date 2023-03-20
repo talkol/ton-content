@@ -40,13 +40,13 @@ A popular decentralized solution to this problem is to revolve voting rights aro
 
 All blockchains are networks because they are operated by a group of users. Users that do the heavy lifting of operating the network and actively participate in the consensus process are called ***validators***. The voting weight of every validator is proportional to the amount of tokens they hold. To keep validators honest, they are normally required to put their tokens **at stake**. If the consensus deems that a validator is dishonest, their tokens will be taken away as punishment. This governance process is called ***proof-of-stake***.
 
-Being a network validator is usually hard work. You need to run the ***blockchain node*** code on a server that you own and stake it with a lot of tokens. Smaller users that want to participate but don't have enough tokens to warrant going to all this effort can often delegate their tokens to one of the larger validators. These participants are called ***nominators***.
+Being a network validator is usually hard work. You need to run the ***[blockchain node](https://ton.org/docs/participate/nodes/run-node)*** code on a server that you own and stake it with a lot of tokens. Smaller users that want to participate but don't have enough tokens to warrant going to all this effort can often delegate their tokens to one of the larger validators. These participants are called ***nominators***.
 
 ## Gas fees
 
 We said earlier that blockchains are economies. The equipment for network validators is not free, so they must be paid for their efforts. Payment naturally takes place with the token of the blockchain. On the TON blockchain, users pay fees using the TON coin. TON network validators earn TON coin for performing the validation process and executing all the apps that are running on the blockchain.
 
-When a user is performing some action on the blockchain, they must send a ***transaction***. The transaction includes a fee payment called ***gas***. The analogy comes from cars. Just like a car needs gas to run, so does a blockchain transaction. Users must ***sign*** transactions using their blockchain ***wallets***. This signature guarantees that only the owner of the wallet can authorize the payment of gas and sending the transaction.
+When a user is performing some action on the blockchain, they must send a ***transaction***. The transaction includes a [fee payment](https://ton.org/docs/develop/smart-contracts/fees) called ***gas***. The analogy comes from cars. Just like a car needs gas to run, so does a blockchain transaction. Users must ***sign*** transactions using their blockchain ***wallets***. This signature guarantees that only the owner of the wallet can authorize the payment of gas and sending the transaction.
 
 ## Dapps
 
@@ -60,7 +60,7 @@ Every Web2 service like Google Search has terms of service. If a user feels that
 
 Blockchain replaces legal contracts with code. The code of the dapp is therefore called a ***smart contract***. Before users decide to participate in a dapp, by sending it transactions for example, they are expected to [review](https://verifier.ton.org) the dapp's source code to understand its terms. Just like you wouldn't sign a lease contract for your apartment without reading the contract, you should not sign a transaction without reviewing the smart contract. Since not all users are tech savvy enough to do this, communities often rely on each other for this purpose.
 
-After the developer finished writing the smart contract, the act of publishing this contract to the blockchain is called ***deployment***. The contract code is deployed on to the chain where everybody can find it by its ***contract address***.
+After the developer finished writing the smart contract, the act of publishing this contract to the blockchain is called ***deployment***. The contract code is deployed on to the chain where everybody can find it by its ***[contract address](https://ton.org/docs/learn/overviews/addresses)***. 
 
 ## Blocks and explorers
 
