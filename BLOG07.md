@@ -82,6 +82,6 @@ The library was originally contributed by [TonWhales](https://tonwhales.com) and
 
 * The shared ownership fork of the library will be published on NPM as `@ton/core`
 
-In the spirit of decentralization, I call teams to support this transition of popular shared libraries to shared ownership and move the original repositories so we can avoid unnecessary forks. We've been thinking about this transition for a long time with support of the TON Foundation. The only motivation is improving the ecosystem as a whole.
+In the spirit of decentralization, I call on teams to support this transition of popular shared libraries to shared ownership and move the original repositories so we can avoid unnecessary forks. We've been thinking about this transition for a long time with support of the TON Foundation. The only motivation is improving the ecosystem as a whole.
 
 Happy coding!
