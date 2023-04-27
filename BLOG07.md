@@ -1,6 +1,6 @@
 # Creating a stable home for TON libraries
 
-Blockchain development on TON is more than just smart contracts in FunC and Tact. TON developers rely on a plethora of libraries for building anything from dapp frontends to bots and rely on dev tools for compiling and testing their smart contracts.
+Blockchain development on TON is more than just smart contracts in FunC and Tact. TON developers rely on a plethora of libraries for building anything from dapp frontends to bots and rely on diverse dev tools for compiling and testing their smart contracts.
 
 These libraries and tools are implemented in a variety of languages from TypeScript/JavaScript to Python. Each language usually comes with its own library distrubtion channel like [NPM](https://npmjs.com).
 
