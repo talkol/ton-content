@@ -60,7 +60,7 @@ This home is for peripheral libraries and tools. Many of those are not maintaine
 
   We are creating a new GitHub organization labeled after the primary `ton.org` domain.
 
-  We've chosen a destination outside the [ton-blockchain](https://github.com/ton-blockchain) GitHub organization, since this was reserved for the core node infrastructure and protocol and is primarily maintained by the core team and not external contributors from the community.
+  We've chosen a destination outside the [ton-blockchain](https://github.com/ton-blockchain) GitHub organization, since the latter is reserved for the core node infrastructure and protocol and is primarily maintained by the core team and not external contributors from the community.
   
   We've chosen a destination different from the [ton-community](https://github.com/ton-community) GitHub organization so it can focus on a smaller and more official list of core libraries whereas community is open for almost anything.
   
