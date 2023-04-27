@@ -18,7 +18,7 @@ In the first days of [Jetton Minter](https://github.com/ton-blockchain/minter), 
 
 If so, why not leave it under single ownership in the hands of Orbs? We did create it, didn't we?
 
-Well.. this raises a few quesions:
+Well.. this raises a few concerns:
 
 * Orbs is developing other products that are core to its business model. Obviously they'll always be prioritized over something that isn't. What happens if we become too busy to maintain this tool properly?
 
