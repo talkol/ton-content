@@ -38,7 +38,7 @@ The open source model keeps libraries honest.
 
 I'm a firm believer that once a library or a tool become a popular shared dependency of many projects, it should transition away from single ownership. It is never in the best interest of the community to keep relying on something that poses too much risk. Single ownership is too risky. One rogue actor should not be able to impact a large part of our ecosystem.
 
-When [Jetton Minter](https://github.com/ton-blockchain/minter) became popular, Orbs surrendered ownership over it to the community. The repo moved from Orbs to [ton-blockchain](https://github.com/ton-blockchain) and the tool moved to be hosted on a [TON Foundation domain](https://minter.ton.org).
+When [Jetton Minter](https://github.com/ton-blockchain/minter) became popular, Orbs surrendered ownership over it to the community. The repo moved from Orbs to the [ton-blockchain](https://github.com/ton-blockchain) organization on GitHub and the tool moved to be hosted on a [TON Foundation domain](https://minter.ton.org).
 
 Even if we hadn't done these things, since the tool was [MIT](https://github.com/ton-blockchain/minter/blob/main/LICENSE), if these steps would have improved the tool for the community, somebody else would have forked and done them for us.
 
