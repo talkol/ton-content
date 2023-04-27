@@ -46,7 +46,7 @@ Even if we hadn't done these things, since the tool was [MIT](https://github.com
 
 When you publish a TypeScript/JavaScript library for import by other developers, you normally publish it to [NPM](https://npmjs.com). The problem with NPM is that it doesn't follow the open source no lock-in model. NPM packages have a well-known name that people import. This name, similar to a domain name, cannot be forked.
 
-NPM names are given for free on a first-come first-serve basis. This means that they're very prone to squatting. Names that we could have used often turn out to be already registered even if they're still unused. This also poses a security issue. Is the NPM library [ton-crypto](https://www.npmjs.com/package/ton-crypto) official or not? Can you use it safely with your secret mnemonic?
+NPM names are given for free on a first-come first-serve basis. This means that they're very prone to squatting. Names that we could have used often turn out to be already registered even if they're still unused. This also poses a security issue. Is the NPM library [ton-crypto](https://www.npmjs.com/package/ton-crypto) official or not? Can you use it safely with your secret mnemonic? How would you know?
 
 ## A stable home for shared TON libraries
 
