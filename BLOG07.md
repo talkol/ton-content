@@ -66,7 +66,7 @@ This home is for peripheral libraries and tools. Many of those are not maintaine
   
 * https://www.npmjs.com/org/ton
 
-  We were finally successful in taking over the `@ton` NPM organization!
+  We were finally successful in acquiring the `@ton` NPM organization!
   
   We are now on par with other prominent blockchain ecosystems like [@solana](https://www.npmjs.com/org/solana) that list all of the official core libraries under one namespace.
   
