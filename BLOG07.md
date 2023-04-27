@@ -30,7 +30,7 @@ Well.. this raises a few quesions:
 
 The open source model gives simple answers to the above questions. The tool is only popular as long as its users make it popular. Many projects will depend on this tool only as long as they're happy to do so.
 
-Shared libraries should always be published under a permissive open source license like [MIT](https://opensource.org/license/mit). This provides a strong guarantee to the library userbase that this library will never be abused. A permissive open source license eliminates lock in. If the maintainer of the library fails its userbase, somebody will [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the library and create a better version.
+Shared libraries should always be published under a permissive open source license like [MIT](https://opensource.org/license/mit). This provides a strong guarantee to the library userbase that this library will never be abused. A permissive open source license eliminates lock-in. If the maintainer of the library fails its userbase, somebody will [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the library and create a better version.
 
 The open source model keeps libraries honest.
 
@@ -38,5 +38,12 @@ The open source model keeps libraries honest.
 
 I'm a firm believer that once a library or a tool become a popular shared dependency of many projects, it should transition away from single ownership. It is never in the best interest of the community to keep relying on something that poses too much risk. Single ownership is too much risk. One rogue actor should not be able to impact a large part of our ecosystem.
 
-When [Jetton Minter](https://github.com/ton-blockchain/minter) became popular, Orbs surrendered ownership over it to the community. The repo moved from Orbs to [ton-blockchain](https://github.com/ton-blockchain) and the tool moved to be hosted on a [TON Foundation](https://ton.org) domain.
+When [Jetton Minter](https://github.com/ton-blockchain/minter) became popular, Orbs surrendered ownership over it to the community. The repo moved from Orbs to [ton-blockchain](https://github.com/ton-blockchain) and the tool moved to be hosted on a [TON Foundation domain](https://minter.ton.org).
 
+Even if we hadn't done these things, since the tool was [MIT](https://github.com/ton-blockchain/minter/blob/main/LICENSE), if these steps would have improved the tool for the community, somebody else would have forked and done them for us.
+
+## The challenge with NPM
+
+When you publish a TypeScript/JavaScript library for import by other developers, you normally publish it to [NPM](https://npmjs.com). The problem with NPM is that it doesn't follow the open source no lock-in model. NPM packages have a well-known name that people import. This name, similar to a domain name, cannot be forked.
+
+NPM names are given for free on a first-come first-serve basis. This means that they're very prone to squatting. Names that we could have used often turn out to be already registered even if they're still unused. This also poses a security issue. Is the NPM library [ton-crypto](https://www.npmjs.com/package/ton-crypto) official or not? Can you use it safely with your secret mnemonic?
