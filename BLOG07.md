@@ -47,3 +47,41 @@ Even if we hadn't done these things, since the tool was [MIT](https://github.com
 When you publish a TypeScript/JavaScript library for import by other developers, you normally publish it to [NPM](https://npmjs.com). The problem with NPM is that it doesn't follow the open source no lock-in model. NPM packages have a well-known name that people import. This name, similar to a domain name, cannot be forked.
 
 NPM names are given for free on a first-come first-serve basis. This means that they're very prone to squatting. Names that we could have used often turn out to be already registered even if they're still unused. This also poses a security issue. Is the NPM library [ton-crypto](https://www.npmjs.com/package/ton-crypto) official or not? Can you use it safely with your secret mnemonic?
+
+## A stable home for shared TON libraries
+
+In the effort to make the TON ecosystem safer and more stable for developers, we have been looking for a shared home where popular shared libraries in the TON ecosystem can be transitioned to shared ownership.
+
+This place must not be owned by a single company or a single person. It must operate under a code of conduct where a group of well-known contributors trusted by the TON community can make decisions together for the benefit of the ecosystem. Unresolved disputes should escalate to the TON Foundation.
+
+This home is for peripheral libraries and tools. Many of those are not maintained by the core team, so this home should be able to give write access to external contributors. Nevertheless, representatives from the core team will have admin privileges.
+
+* https://github.com/ton-org
+
+  We are creating a new GitHub organization labeled after the primary `ton.org` domain.
+
+  We've chosen a destination outside the [ton-blockchain](https://github.com/ton-blockchain) GitHub organization, since this was reserved for the core node infrastructure and protocol and is primarily maintained by the core team and not external contributors from the community.
+  
+  We've chosen a destination different from the [ton-community](https://github.com/ton-community) GitHub organization so it can focus on a smaller and more official list of core libraries whereas community is open for almost anything.
+  
+* https://www.npmjs.com/org/ton
+
+  We were finally successful in taking over the `@ton` NPM organization!
+  
+  We are now on par with other prominent blockchain ecosystems like [@solana](https://www.npmjs.com/org/solana) that list all of the official core libraries under one namespace.
+  
+  Using an NPM organization gives us full control of all names under this namespace. This resolves many of the challenges we had with NPM. Squatting is not possible under this namespace since all sub-names are ours and users will be able to identify safe official libraries with ease.
+  
+## A first example
+
+One of the most popular TypeScript libraries in the TON ecosystem is `ton-core`. This is not only a shared dependency for many projects, but other shared libraries often depend on it too.
+
+The library was originally contributed by [TonWhales](https://tonwhales.com) and maintained exclusively by the Whales team - credit given where credit is due. We want the library to transition to shared ownership where multiple contributors from multiple entities will be able to work on it together.
+
+* The shared ownership fork of the library will be hosted on https://github.com/ton-org/ton-core
+
+* The shared ownership fork of the library will be published on NPM as `@ton/core`
+
+In the spirit of decentralization, I call teams to support this transition of popular shared libraries to shared ownership and move the original repositories so we can avoid unnecessary forks. We've been thinking about this transition for a long time with support of the TON Foundation. The only motivation is improving the ecosystem as a whole.
+
+Happy coding!
