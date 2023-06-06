@@ -82,9 +82,9 @@ The overwhelming majority of protocols built on the EVM ecosystem, like [Uniswap
 
 3. Choose 5-10 core team members and create a multi-sig wallet on TON. This part is still tricky because proper multi-sig wallets are still under development. Use this multi-sig wallet to manage the protocol treasury and as the admin role of any of your smart contracts as required.
 
-4. Create a space on [ton.vote](https://ton.vote). We created ton.vote to be a version of EVM's [snapshot.org](https://snapshot.org) that is tailor made for TON.
+4. Create a space on [ton.vote](https://ton.vote). We created ton.vote to be a version of EVM's [snapshot.org](https://snapshot.org) that is tailor made for TON. TON.Vote is a trustless platform that will allow all of your token holders to vote based on the amount of tokens they hold.
 
-5. Engage your community by issuing proposals for votes. It will take time and effort before your community is active enough in the voting. As you see engagement increasing, put more and more emphasis on putting important decisions in the hands of the community.
+5. Engage your community repeatedly by issuing proposals for votes. It will take time and effort before your community is active enough in the voting. As you see engagement increasing, put more and more emphasis on putting important decisions in the hands of the community.
 
 6. Keep the treasury wallet and contract admin wallets in the hand of the multi-sig group. This group will execute the will of the community and make sure that the voting process isn't abused.
 
