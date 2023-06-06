@@ -42,15 +42,33 @@ So what is a *closed DAO*? Suppose that a group of 5 friends decide to create a 
 
 Although *closed DAOs* are technically DAOs, in the context of building dapps on TON, I prefer to use the term "DAO" only for *open DAOs*.
 
-I prefer to refer to *closed DAOs* as "multi-sigs".
+I like to refer to *closed DAOs* as "multi-sigs".
 
 The term multi-sig comes from wallet management. A normal crypto wallet has a single signer with a single private key. If you know the private key, you effectively own the wallet and can use it to sign whatever transaction you desire. A multi-sig is crypto wallet that has a group of multiple different owners, each having their own private key. In order to sign a transaction, you need to collect multiple signatures. For example, a multi-sig of 5 owners will normally issue a transaciton when 3 of 5 signatures are collected.
 
 If you look closely, you will see that a multi-sig has the same characteristics as a closed DAO:
 
-* Participation is not open and new candidates for membership may be denied - match! strangers are naturally unwelcome when managing a mutli-sig wallet
-* Membership requires approval by a majority of existing members - match! adding a new signer to a multi-sig requires approval of existing signers
-* Participation rights are normally not transferable - match! once you know one of the private keys, you can't really "un-know" it so you cannot surrender your ownership to somebody else
+* Participation is not open and new candidates for membership may be denied - match, strangers are naturally unwelcome when managing a mutli-sig wallet
+* Membership requires approval by a majority of existing members - match, adding a new signer to a multi-sig requires approval of existing signers
+* Participation rights are normally not transferable - match, once you know one of the private keys, you can't really "un-know" it so you cannot surrender your ownership to somebody else
 
-The separation of terms is important because many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) for example. If you were building Uniswap, you could not use XDAO to govern your open DAO. In my terminology, XDAO is a tool for multi-sigs.
+Clear separation of terms is important to avoid confusion. Many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) for example. If you were building the Uniswap protocol, you could not use XDAO to govern your open DAO. In my terminology, XDAO is actually a tool for *multi-sigs*!
+
+## The road to decentralization of a DAO
+
+After gaining some real world experience with dapps you soon realize that decentralization is a spectrum. Most dapps start off as fairly centralized but become more and more decentralized over time. It is very difficult to fully decentralize a new project overnight, after all it doesn't have a well distributed community of members just yet.
+
+So how decentralized should your new project be? My main recommendation to you is to remain practical. Make compromises that are necessary for success, but set your sights on the right long term target. Make sure to have a constant sense of progression towards this goal and don't compromise on the fundamentals.
+
+Treasury management is a good example of a practical compromise. Creating a new dapp like Uniswap is usually unlikely to happen without raising funds. Funds raised would normally go towards paying employees such as engineers to build the protocol. Some of these employees may not be willing to receive crypto as payment, so setting up a regular bank account is often a necessity.
+
+Even when building an *open DAO*, it is usually sensible to keep the treasury as a *multi-sig*. A small group of community representatives manages the treasury wallet as a multi-sig wallet and executes the will of the community which is queried through infrequent votes.
+
+Let's take TON Foundation as a practical example. The Foundation controls a treasury wallet with more than $50,000,000. It would be irresponsible to control this wallet from a pure on-chain governance contract that takes into account all TON holders for every outgoing transaction. First of all, the sheer number of transactions is too high for a full commumnity vote on each one, the community is unlikely to dive into the details of every contract and payment and regular bank accounts cannot be controlled by on-chain mechanisms, no matter how much we try.
+
+We can see the same practical division of responsibility in the traditional democracy used to govern countries. The full population participates in infrequent votes on material things. There is a small professional government that manages the treasury without calling to a full referendum for every payment. Yet the power lies in the hands of the population, not the acting government.
+
+## Learning from the DAOs that came before us
+
+Another important tip when experimenting with avant-garde social constructs such as DAOs is to learn from the experience of those that came before us. Although TON is a ground-breaking L1 blockchain with a technology stack that innovates over its predecessors, the social constructs built on TON are not fundamentally different. This means that we can look at mature open DAOs implemented on chains like Ethereum and see how they're governed.
 
