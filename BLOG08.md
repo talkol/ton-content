@@ -38,7 +38,7 @@ So what is a *closed DAO*? Suppose that a group of 5 friends decide to create a 
 * Membership requires approval by a majority of existing members
 * Participation rights are normally not transferable
 
-## DAO vs. multi-sig
+## Terminology: DAO vs. multi-sig
 
 Although *closed DAOs* are technically DAOs, in the context of building dapps on TON, I prefer to use the term "DAO" only for *open DAOs*.
 
@@ -72,3 +72,20 @@ We can see the same practical division of responsibility in the traditional demo
 
 Another important tip when experimenting with avant-garde social constructs such as DAOs is to learn from the experience of those that came before us. Although TON is a ground-breaking L1 blockchain with a technology stack that innovates over its predecessors, the social constructs built on TON are not fundamentally different. This means that we can look at mature open DAOs implemented on chains like Ethereum and see how they're governed.
 
+The overwhelming majority of protocols built on the EVM ecosystem, like [Uniswap](https://uniswap.org/), [Aave](https://aave.com/), [Sushi](https://sushi.com) and [Arbitrum](https://arbitrum.io/) are governed on a platform called [snapshot.org](https://snapshot.org). This platform allows every token holder to vote on proposals. Treasury wallets and contract admin roles (for special actions like upgrades) are normally controlled by a multi-sig of multiple core team members. The core team uses the multi-sig to execute transactions based on the will of the community seen in the vote results.
+
+## TLDR: So how should I govern my new dapp project on TON?
+
+1. Mint a token for your DAO that participants can acquire without limitations. If you want a fungible token, use [minter.ton.org](https://minter.ton.org) to mint it.
+
+2. Distribute your token to a growing community, your token holders are your DAO members. Strive to grow your community over time as much as possible.
+
+3. Choose 5-10 core team members and create a multi-sig wallet on TON. This part is still tricky because proper multi-sig wallets are still under development. Use this multi-sig wallet to manage the protocol treasury and as the admin role of any of your smart contracts as required.
+
+4. Create a space on [ton.vote](https://ton.vote). We created ton.vote to be a version of EVM's [snapshot.org](https://snapshot.org) that is tailor made for TON.
+
+5. Engage your community by issuing proposals for votes. It will take time and effort before your community is active enough in the voting. As you see engagement increasing, put more and more emphasis on putting important decisions in the hands of the community.
+
+6. Keep the treasury wallet and contract admin wallets in the hand of the multi-sig group. This group will execute the will of the community and make sure that the voting process isn't abused.
+
+As your project gets more and more decentralized, more and more power should transfer from the hands of the multi-sig to the hands of the token holders. But this will take time, even high traction projects like Uniswap and Sushi are not exactly there yet.
