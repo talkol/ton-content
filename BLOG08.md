@@ -78,7 +78,7 @@ The overwhelming majority of protocols built on the EVM ecosystem, like [Uniswap
 
 1. Mint a token for your DAO that participants can acquire without limitations. If you want a fungible token, use [minter.ton.org](https://minter.ton.org) to mint it.
 
-2. Distribute your token to a growing community, your token holders are your DAO members. Strive to grow your community over time as much as possible.
+2. Distribute your token to a growing community, your token holders are your DAO members. Strive to grow your community over time as much as possible. Allow you community to trade the token freely.
 
 3. Choose 5-10 core team members and create a multi-sig wallet on TON. This part is still tricky because proper multi-sig wallets are still under development. Use this multi-sig wallet to manage the protocol treasury and as the admin role of any of your smart contracts as required.
 
@@ -89,3 +89,7 @@ The overwhelming majority of protocols built on the EVM ecosystem, like [Uniswap
 6. Keep the treasury wallet and contract admin wallets in the hand of the multi-sig group. This group will execute the will of the community and make sure that the voting process isn't abused.
 
 As your project gets more and more decentralized, more and more power should transfer from the hands of the multi-sig to the hands of the token holders. But this will take time, even high traction projects like Uniswap and Sushi are not exactly there yet.
+
+---
+
+*Tal is a founder of [Orbs Network](https://orbs.com). He's a passionate blockchain developer, open source advocate and a contributor to the TON ecosystem. He is also one of the main contributors to [Ton.Vote](https://ton.vote). Follow Tal on [GitHub](https://github.com/talkol) and [Twitter](https://twitter.com/koltal). If you found any mistakes in this post, please let Tal know on [Telegram](https://t.me/talkol).*
