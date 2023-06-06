@@ -52,7 +52,7 @@ If you look closely, you will see that a multi-sig has the same characteristics 
 * Membership requires approval by a majority of existing members - match, adding a new signer to a multi-sig requires approval of existing signers
 * Participation rights are normally not transferable - match, once you know one of the private keys, you can't really "un-know" it so you cannot surrender your ownership to somebody else
 
-Clear separation of terms is important to avoid confusion. Many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) for example. If you were building the Uniswap protocol, you could not use XDAO to govern your open DAO. In my terminology, XDAO is actually a tool for *multi-sigs*!
+Clear separation of terms is important to avoid confusion. Many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) for example. If you were building the Uniswap protocol, you could not use XDAO to govern your open DAO. In my terminology, XDAO is actually a tool for *multi-sigs*, not *DAOs*!
 
 ## The road to decentralization of a DAO
 
