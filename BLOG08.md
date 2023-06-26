@@ -26,7 +26,7 @@ The above definition is quite broad and I think it's important to distinguish be
 
 If you're building a new web3 project on TON, the project that you're building is most likely an *open DAO*. The characteristics of an open DAO are:
 
-* Anyone can participate and become a member
+* Anyone can participate and become a member without asking anyone else
 * Membership involves acquisition of a token (jetton or NFT)
 * Participation rights are fully transferable and can be sold to others
 
@@ -37,6 +37,8 @@ So what is a *closed DAO*? Suppose that a group of 5 friends decide to create a 
 * Participation is not open and new candidates for membership may be denied
 * Membership requires approval by a majority of existing members
 * Participation rights are normally not transferable
+
+The number of participants in a closed DAO can be dynamic, so a better example to differentiate between the two types may be: being an employee of Tesla = closed like a *closed DAO*, being a shareholder of publicly traded Tesla = open like an *open DAO*.
 
 ## Terminology: DAO vs. multi-sig
 
@@ -52,7 +54,7 @@ If you look closely, you will see that a multi-sig has the same characteristics 
 * Membership requires approval by a majority of existing members - match, adding a new signer to a multi-sig requires approval of existing signers
 * Participation rights are normally not transferable - match, once you know one of the private keys, you can't really "un-know" it so you cannot surrender your ownership to somebody else
 
-Clear separation of terms is important to avoid confusion. Many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) for example. If you were building the Uniswap protocol, you could not use XDAO to govern your open DAO. Under my terminology, XDAO is actually a tool for *multi-sigs*, not *DAOs*!
+Clear separation of terms is important to avoid confusion. Many ecosystem tools are only suitable for closed DAOs, yet by labeling themselves as a general tool for DAOs, they may confuse you that they're appropriate for the new token-based dapp you're building. Take [this tool](https://www.xdao.app) or [this tool](https://colony.io) for example. If you were building the Uniswap protocol, you could not use XDAO to govern your open DAO. Under my terminology, XDAO is actually a tool for dynamic *multi-sigs*, not *DAOs*!
 
 ## The road to decentralization of a DAO
 
