@@ -80,7 +80,7 @@ The overwhelming majority of protocols built on the EVM ecosystem, like [Uniswap
 
 1. Mint a token for your DAO that participants can acquire without limitations. If you want a fungible token, use [minter.ton.org](https://minter.ton.org) to mint it.
 
-2. Distribute your token to a growing community, your token holders are your DAO members. Strive to grow your community over time as much as possible. Allow you community to trade the token freely.
+2. Distribute your token to a growing community, your token holders are your DAO members. Strive to grow your community over time as much as possible. Allow your community to trade the token freely.
 
 3. Choose 5-10 core team members and create a multi-sig wallet on TON. This part is still tricky because proper multi-sig wallets are still under development. Use this multi-sig wallet to manage the protocol treasury and as the admin role of any of your smart contracts as required.
 
